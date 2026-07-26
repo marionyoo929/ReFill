@@ -1,10 +1,9 @@
-import { PagePlaceholder } from '@/components/common/PagePlaceholder';
+import { CalendarView } from '@/features/calendar';
 
 export default function CalendarPage() {
   return (
-    <PagePlaceholder
-      title="캘린더"
-      description="소진 예정일을 색상 Dot으로 표시하는 캘린더가 이 자리에 표시됩니다."
-    />
+    <div className="mx-auto max-w-3xl px-4 py-6 md:px-8">
+      <CalendarView />
+    </div>
   );
 }

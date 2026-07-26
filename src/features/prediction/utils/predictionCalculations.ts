@@ -21,3 +21,13 @@ export function calculateRiskLevel(remainingDays: number): RiskLevel {
   }
   return 'success';
 }
+
+export function getMostUrgentRiskLevel(riskLevels: RiskLevel[]): RiskLevel {
+  if (riskLevels.includes('danger')) {
+    return 'danger';
+  }
+  if (riskLevels.includes('warning')) {
+    return 'warning';
+  }
+  return 'success';
+}

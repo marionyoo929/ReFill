@@ -1,9 +1,9 @@
-import type { InventoryItem } from '@/features/inventory';
-import type { ItemStatus, RiskLevel } from '@/features/prediction';
+import type { EnrichedInventoryItem } from '@/features/inventory';
+import type { RiskLevel } from '@/features/prediction';
 
 export type { RiskLevel };
 
-export type DashboardItem = InventoryItem & ItemStatus;
+export type DashboardItem = EnrichedInventoryItem;
 
 export type DashboardSummary = {
   totalItemCount: number;

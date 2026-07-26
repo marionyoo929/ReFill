@@ -1,36 +1,11 @@
-import {
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  endOfWeek,
-  eachDayOfInterval,
-  isSameMonth,
-  isSameDay,
-  isToday,
-  format,
-} from 'date-fns';
+import { isSameMonth, isSameDay, isToday, format } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/cn';
-import type { DashboardItem, RiskLevel } from '@/features/dashboard/types/dashboard.types';
-
-const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
-
-const RISK_DOT_CLASS: Record<RiskLevel, string> = {
-  danger: 'bg-danger-500',
-  warning: 'bg-warning-500',
-  success: 'bg-success-500',
-};
-
-function getMostUrgentRisk(items: DashboardItem[]): RiskLevel {
-  if (items.some((item) => item.riskLevel === 'danger')) {
-    return 'danger';
-  }
-  if (items.some((item) => item.riskLevel === 'warning')) {
-    return 'warning';
-  }
-  return 'success';
-}
+import { getMonthGridDays, WEEKDAY_LABELS } from '@/utils/calendarGrid';
+import { RISK_DOT_CLASS } from '@/constants/riskDisplay';
+import { getMostUrgentRiskLevel } from '@/features/prediction';
+import type { DashboardItem } from '@/features/dashboard/types/dashboard.types';
 
 type CalendarPreviewProps = {
   items: DashboardItem[];
@@ -38,11 +13,7 @@ type CalendarPreviewProps = {
 
 export function CalendarPreview({ items }: CalendarPreviewProps) {
   const today = new Date();
-  const monthStart = startOfMonth(today);
-  const monthEnd = endOfMonth(today);
-  const gridStart = startOfWeek(monthStart);
-  const gridEnd = endOfWeek(monthEnd);
-  const days = eachDayOfInterval({ start: gridStart, end: gridEnd });
+  const days = getMonthGridDays(today);
 
   return (
     <section aria-label="이번 달 리필 예정 미리보기">
@@ -81,7 +52,9 @@ export function CalendarPreview({ items }: CalendarPreviewProps) {
                   className={cn(
                     'h-1.5 w-1.5 rounded-full',
                     dayItems.length > 0
-                      ? RISK_DOT_CLASS[getMostUrgentRisk(dayItems)]
+                      ? RISK_DOT_CLASS[
+                          getMostUrgentRiskLevel(dayItems.map((item) => item.riskLevel))
+                        ]
                       : 'bg-transparent',
                   )}
                   aria-hidden="true"
