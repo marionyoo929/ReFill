@@ -44,4 +44,12 @@ export default tseslint.config(
       'react-refresh/only-export-components': 'off',
     },
   },
+  {
+    // Provider 파일은 Context Provider 컴포넌트와 짝을 이루는 useXxx 훅을
+    // 함께 export하는 것이 표준 패턴이므로 Fast Refresh 규칙 대상이 아니다.
+    files: ['src/providers/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 );

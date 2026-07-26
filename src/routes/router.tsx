@@ -10,6 +10,7 @@ const LoginPage = lazy(() => import('@/pages/LoginPage'));
 const SignupPage = lazy(() => import('@/pages/SignupPage'));
 const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'));
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
+const InventoryPage = lazy(() => import('@/pages/InventoryPage'));
 const CalendarPage = lazy(() => import('@/pages/CalendarPage'));
 const ItemDetailPage = lazy(() => import('@/pages/ItemDetailPage'));
 const AddItemPage = lazy(() => import('@/pages/AddItemPage'));
@@ -41,6 +42,7 @@ export const router = createBrowserRouter([
     element: withProtection(<AppLayout />),
     children: [
       { path: ROUTES.DASHBOARD, element: withSuspense(<DashboardPage />) },
+      { path: ROUTES.INVENTORY, element: withSuspense(<InventoryPage />) },
       { path: ROUTES.CALENDAR, element: withSuspense(<CalendarPage />) },
       { path: ROUTES.ITEM_DETAIL, element: withSuspense(<ItemDetailPage />) },
       { path: ROUTES.ADD_ITEM, element: withSuspense(<AddItemPage />) },

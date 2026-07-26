@@ -1,4 +1,4 @@
-import { LayoutDashboard, Calendar, Bell, BarChart3, Settings } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Bell, BarChart3, Settings } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 
@@ -10,6 +10,7 @@ export type NavItem = {
 
 export const NAV_ITEMS: NavItem[] = [
   { label: '대시보드', path: ROUTES.DASHBOARD, icon: LayoutDashboard },
+  { label: '물건', path: ROUTES.INVENTORY, icon: Package },
   { label: '캘린더', path: ROUTES.CALENDAR, icon: Calendar },
   { label: '알림', path: ROUTES.NOTIFICATIONS, icon: Bell },
   { label: '분석', path: ROUTES.ANALYTICS, icon: BarChart3 },

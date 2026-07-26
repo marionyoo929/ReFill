@@ -4,6 +4,7 @@ export const ROUTES = {
   SIGNUP: '/signup',
   ONBOARDING: '/onboarding',
   DASHBOARD: '/dashboard',
+  INVENTORY: '/items',
   CALENDAR: '/calendar',
   ITEM_DETAIL: '/items/:itemId',
   ADD_ITEM: '/items/new',

@@ -1,10 +1,24 @@
-import { PagePlaceholder } from '@/components/common/PagePlaceholder';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
+import { useToast } from '@/providers/ToastProvider';
+import { ItemForm, useCreateInventoryItem } from '@/features/inventory';
+import type { InventoryItemInput } from '@/features/inventory';
 
 export default function AddItemPage() {
+  const navigate = useNavigate();
+  const { showToast } = useToast();
+  const { mutateAsync, isPending } = useCreateInventoryItem();
+
+  async function handleSubmit(values: InventoryItemInput) {
+    await mutateAsync(values);
+    showToast(`${values.name}이(가) 등록되었습니다.`);
+    void navigate(ROUTES.INVENTORY);
+  }
+
   return (
-    <PagePlaceholder
-      title="물건 등록"
-      description="이름, 카테고리, 브랜드 등을 입력하는 물건 등록 폼이 이 자리에 표시됩니다."
-    />
+    <div className="mx-auto max-w-xl px-4 py-6 md:px-8">
+      <h1 className="mb-6 text-xl font-bold text-gray-900">물건 등록</h1>
+      <ItemForm mode="create" isSubmitting={isPending} onSubmit={handleSubmit} />
+    </div>
   );
 }
