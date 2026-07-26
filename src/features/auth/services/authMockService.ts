@@ -69,6 +69,21 @@ export async function login(input: LoginInput): Promise<AuthUser> {
   return toAuthUser(found);
 }
 
+export async function updateNickname(uid: string, nickname: string): Promise<AuthUser> {
+  await delay();
+  const users = readUsers();
+  const index = users.findIndex((user) => user.uid === uid);
+  if (index === -1) {
+    throw new Error('사용자를 찾을 수 없습니다.');
+  }
+
+  const updated: StoredUser = { ...users[index], nickname };
+  const nextUsers = [...users];
+  nextUsers[index] = updated;
+  writeUsers(nextUsers);
+  return toAuthUser(updated);
+}
+
 export async function logout(): Promise<void> {
   await delay();
   localStorage.removeItem(SESSION_STORAGE_KEY);

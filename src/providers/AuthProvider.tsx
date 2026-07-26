@@ -4,6 +4,7 @@ import {
   login as loginRequest,
   signup as signupRequest,
   logout as logoutRequest,
+  updateNickname as updateNicknameRequest,
 } from '@/features/auth';
 import type { AuthUser, LoginInput, SignupInput } from '@/features/auth';
 
@@ -13,6 +14,7 @@ type AuthContextValue = {
   login: (input: LoginInput) => Promise<void>;
   signup: (input: SignupInput) => Promise<void>;
   logout: () => Promise<void>;
+  updateNickname: (nickname: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -54,8 +56,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }
 
+  async function updateNickname(nickname: string) {
+    if (!user) {
+      return;
+    }
+    const updatedUser = await updateNicknameRequest(user.uid, nickname);
+    setUser(updatedUser);
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isInitializing, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isInitializing, login, signup, logout, updateNickname }}>
       {children}
     </AuthContext.Provider>
   );

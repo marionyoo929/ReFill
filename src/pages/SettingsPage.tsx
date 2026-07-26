@@ -1,10 +1,10 @@
-import { PagePlaceholder } from '@/components/common/PagePlaceholder';
+import { SettingsView } from '@/features/settings';
 
 export default function SettingsPage() {
   return (
-    <PagePlaceholder
-      title="설정"
-      description="알림 설정, 배송 리드타임, 다크모드 등의 옵션이 이 자리에 표시됩니다."
-    />
+    <div className="mx-auto max-w-xl px-4 py-6 md:px-8">
+      <h1 className="mb-6 text-xl font-bold text-gray-900">설정</h1>
+      <SettingsView />
+    </div>
   );
 }
