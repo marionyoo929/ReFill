@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { RouteLoadingFallback } from '@/components/common/RouteLoadingFallback';
+import { AppLayout } from '@/components/layout/AppLayout';
 
 const LandingPage = lazy(() => import('@/pages/LandingPage'));
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
@@ -23,7 +24,7 @@ function withSuspense(element: ReactNode) {
 }
 
 function withProtection(element: ReactNode) {
-  return withSuspense(<ProtectedRoute>{element}</ProtectedRoute>);
+  return <ProtectedRoute>{element}</ProtectedRoute>;
 }
 
 export const router = createBrowserRouter([
@@ -32,16 +33,23 @@ export const router = createBrowserRouter([
   { path: ROUTES.LOGIN, element: withSuspense(<LoginPage />) },
   { path: ROUTES.SIGNUP, element: withSuspense(<SignupPage />) },
 
-  // Protected Routes
-  { path: ROUTES.ONBOARDING, element: withProtection(<OnboardingPage />) },
-  { path: ROUTES.DASHBOARD, element: withProtection(<DashboardPage />) },
-  { path: ROUTES.CALENDAR, element: withProtection(<CalendarPage />) },
-  { path: ROUTES.ITEM_DETAIL, element: withProtection(<ItemDetailPage />) },
-  { path: ROUTES.ADD_ITEM, element: withProtection(<AddItemPage />) },
-  { path: ROUTES.NOTIFICATIONS, element: withProtection(<NotificationPage />) },
-  { path: ROUTES.ANALYTICS, element: withProtection(<AnalyticsPage />) },
-  { path: ROUTES.SETTINGS, element: withProtection(<SettingsPage />) },
-  { path: ROUTES.PROFILE, element: withProtection(<ProfilePage />) },
+  // Protected Routes - 전체 화면 플로우 (공통 App Layout 없이 표시)
+  { path: ROUTES.ONBOARDING, element: withProtection(withSuspense(<OnboardingPage />)) },
+
+  // Protected Routes - 공통 App Layout(Sidebar/BottomNav/FAB) 적용
+  {
+    element: withProtection(<AppLayout />),
+    children: [
+      { path: ROUTES.DASHBOARD, element: withSuspense(<DashboardPage />) },
+      { path: ROUTES.CALENDAR, element: withSuspense(<CalendarPage />) },
+      { path: ROUTES.ITEM_DETAIL, element: withSuspense(<ItemDetailPage />) },
+      { path: ROUTES.ADD_ITEM, element: withSuspense(<AddItemPage />) },
+      { path: ROUTES.NOTIFICATIONS, element: withSuspense(<NotificationPage />) },
+      { path: ROUTES.ANALYTICS, element: withSuspense(<AnalyticsPage />) },
+      { path: ROUTES.SETTINGS, element: withSuspense(<SettingsPage />) },
+      { path: ROUTES.PROFILE, element: withSuspense(<ProfilePage />) },
+    ],
+  },
 
   // Not Found
   { path: ROUTES.NOT_FOUND, element: withSuspense(<NotFoundPage />) },
