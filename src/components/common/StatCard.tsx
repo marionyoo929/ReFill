@@ -2,19 +2,14 @@ import type { LucideIcon } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { cn } from '@/lib/cn';
 
-type SummaryStatCardProps = {
+type StatCardProps = {
   label: string;
   value: string;
   icon: LucideIcon;
   tone?: 'default' | 'danger';
 };
 
-export function SummaryStatCard({
-  label,
-  value,
-  icon: Icon,
-  tone = 'default',
-}: SummaryStatCardProps) {
+export function StatCard({ label, value, icon: Icon, tone = 'default' }: StatCardProps) {
   return (
     <Card className="flex items-center gap-3">
       <div
