@@ -1,35 +1,35 @@
 import { Card } from '@/components/ui/Card';
 import { cn } from '@/lib/cn';
-import { THEME_OPTIONS } from '@/features/settings/constants/settingsOptions';
-import type { ThemeMode } from '@/features/settings/types/settings.types';
+import { useTheme } from '@/providers/ThemeProvider';
 
-type ThemeSettingsSectionProps = {
-  theme: ThemeMode;
-  onChange: (theme: ThemeMode) => void;
-};
+export function ThemeSettingsSection() {
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
 
-export function ThemeSettingsSection({ theme, onChange }: ThemeSettingsSectionProps) {
   return (
-    <Card className="flex flex-col gap-4">
-      <h2 className="text-lg font-bold text-gray-900">테마</h2>
-      <div className="grid grid-cols-3 gap-2">
-        {THEME_OPTIONS.map((option) => (
-          <button
-            key={option.value}
-            type="button"
-            onClick={() => onChange(option.value)}
-            aria-pressed={theme === option.value}
-            className={cn(
-              'rounded-2xl border px-3 py-2.5 text-sm font-medium transition-colors',
-              theme === option.value
-                ? 'border-primary-500 bg-primary-50 text-primary-700'
-                : 'border-gray-200 text-gray-600 hover:bg-gray-50',
-            )}
-          >
-            {option.label}
-          </button>
-        ))}
+    <Card className="flex items-center justify-between gap-3">
+      <div>
+        <h2 className="text-lg font-bold text-gray-900">테마</h2>
+        <p className="mt-0.5 text-sm text-gray-500">다크 모드를 켜거나 끌 수 있어요.</p>
       </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={isDark}
+        aria-label="다크 모드"
+        onClick={toggleTheme}
+        className={cn(
+          'relative h-6 w-11 shrink-0 rounded-full transition-colors',
+          isDark ? 'bg-primary-600' : 'bg-gray-200',
+        )}
+      >
+        <span
+          className={cn(
+            'absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform',
+            isDark ? 'translate-x-[22px]' : 'translate-x-0.5',
+          )}
+        />
+      </button>
     </Card>
   );
 }

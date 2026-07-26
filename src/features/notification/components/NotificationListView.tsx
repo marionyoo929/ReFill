@@ -3,10 +3,27 @@ import { NotificationCard } from '@/features/notification/components/Notificatio
 import { NotificationEmptyState } from '@/features/notification/components/NotificationEmptyState';
 import { NotificationSkeleton } from '@/features/notification/components/NotificationSkeleton';
 import { ErrorState } from '@/components/common/ErrorState';
+import { useToast } from '@/providers/ToastProvider';
 
 export function NotificationListView() {
-  const { notifications, unreadCount, isLoading, isError, markAsRead, markAllAsRead } =
-    useNotifications();
+  const {
+    notifications,
+    unreadCount,
+    isLoading,
+    isError,
+    markAsRead,
+    markAllAsRead,
+    isMarkingAllAsRead,
+  } = useNotifications();
+  const { showToast } = useToast();
+
+  async function handleMarkAllAsRead() {
+    try {
+      await markAllAsRead();
+    } catch {
+      showToast('전체 읽음 처리에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    }
+  }
 
   if (isLoading) {
     return <NotificationSkeleton />;
@@ -27,10 +44,11 @@ export function NotificationListView() {
         {unreadCount > 0 && (
           <button
             type="button"
-            onClick={markAllAsRead}
-            className="text-sm font-medium text-primary-600 hover:text-primary-700"
+            onClick={() => void handleMarkAllAsRead()}
+            disabled={isMarkingAllAsRead}
+            className="text-sm font-medium text-primary-600 hover:text-primary-700 disabled:opacity-50"
           >
-            전체 읽음 처리
+            {isMarkingAllAsRead ? '처리 중...' : '전체 읽음 처리'}
           </button>
         )}
       </div>

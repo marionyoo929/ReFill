@@ -8,7 +8,7 @@ import { ThemeSettingsSection } from '@/features/settings/components/ThemeSettin
 import { LogoutSection } from '@/features/settings/components/LogoutSection';
 import { SettingsSkeleton } from '@/features/settings/components/SettingsSkeleton';
 import { ErrorState } from '@/components/common/ErrorState';
-import type { ThemeMode, UserSettings } from '@/features/settings/types/settings.types';
+import type { UserSettings } from '@/features/settings/types/settings.types';
 
 export function SettingsView() {
   const { data: settings, isLoading, isError } = useSettings();
@@ -28,15 +28,6 @@ export function SettingsView() {
 
   if (isError) {
     return <ErrorState message="설정 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요." />;
-  }
-
-  async function handleThemeChange(theme: ThemeMode) {
-    if (!draft) {
-      return;
-    }
-    const next = { ...draft, theme };
-    setDraft(next);
-    await mutateAsync(next);
   }
 
   async function handleSave() {
@@ -69,10 +60,7 @@ export function SettingsView() {
         {isPending ? '저장 중...' : '설정 저장'}
       </button>
 
-      <ThemeSettingsSection
-        theme={draft.theme}
-        onChange={(theme) => void handleThemeChange(theme)}
-      />
+      <ThemeSettingsSection />
 
       <LogoutSection />
     </div>

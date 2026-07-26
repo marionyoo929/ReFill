@@ -11,7 +11,6 @@ const MOCK_DELAY_MS = 300;
 export const DEFAULT_SETTINGS: UserSettings = {
   notificationEnabled: true,
   leadTimeDays: 3,
-  theme: 'system',
 };
 
 function delay(): Promise<void> {
