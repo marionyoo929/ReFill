@@ -6,5 +6,5 @@ export {
   logout,
   getCurrentUser,
   updateNickname,
-} from '@/features/auth/services/authMockService';
+} from '@/features/auth/services/authFirebaseService';
 export type { AuthUser, LoginInput, SignupInput } from '@/features/auth/types/auth.types';

@@ -3,7 +3,7 @@ import {
   createInventoryItem,
   updateInventoryItem,
   deleteInventoryItem,
-} from '@/features/inventory/services/inventoryMockService';
+} from '@/features/inventory/services/inventoryFirebaseService';
 import { INVENTORY_QUERY_KEY } from '@/features/inventory/hooks/useInventoryItems';
 import type { InventoryItemInput } from '@/features/inventory/types/inventory.types';
 

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getInventoryItemById } from '@/features/inventory/services/inventoryMockService';
+import { getInventoryItemById } from '@/features/inventory/services/inventoryFirebaseService';
 
 export function useInventoryItem(id: string) {
   return useQuery({
