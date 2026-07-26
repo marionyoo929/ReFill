@@ -53,7 +53,10 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
       noValidate
     >
       <div>
-        <label htmlFor="nickname" className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="nickname"
+          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+        >
           닉네임
         </label>
         <Input
@@ -68,7 +71,10 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
       </div>
 
       <div>
-        <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="email"
+          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+        >
           이메일
         </label>
         <Input
@@ -82,7 +88,10 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
       </div>
 
       <div>
-        <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="password"
+          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+        >
           비밀번호
         </label>
         <Input
@@ -98,7 +107,10 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
       </div>
 
       <div>
-        <label htmlFor="passwordConfirm" className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="passwordConfirm"
+          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+        >
           비밀번호 확인
         </label>
         <Input

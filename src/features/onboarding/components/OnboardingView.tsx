@@ -76,7 +76,7 @@ export function OnboardingView() {
           <button
             type="button"
             onClick={goPrevious}
-            className="rounded-2xl px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100"
+            className="rounded-2xl px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-200"
           >
             이전
           </button>
