@@ -1,0 +1,81 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+
+    // users/{uid} - 본인 프로필만 읽기/쓰기 가능
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // settings/{uid} - 본인 설정만 읽기/쓰기 가능
+    match /settings/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // analytics/{uid} - 본인 통계만 읽기 가능, 쓰기는 Cloud Functions(Admin SDK)에서만 수행
+    match /analytics/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    // product_db - 전체 사용자 읽기 전용, 관리자만 쓰기 가능
+    match /product_db/{productId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // categories - product_db와 동일하게 참조용 마스터 데이터
+    match /categories/{categoryId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // user_items/{itemId} - 소유자만 읽기/쓰기 가능
+    match /user_items/{itemId} {
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // prediction_logs/{predictionId} - 연결된 user_items의 소유자만 접근 가능
+    match /prediction_logs/{predictionId} {
+      allow read: if isSignedIn() &&
+        get(/databases/$(database)/documents/user_items/$(resource.data.itemId)).data.userId == request.auth.uid;
+      allow create: if isSignedIn() &&
+        get(/databases/$(database)/documents/user_items/$(request.resource.data.itemId)).data.userId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // notifications/{notificationId} - 소유자만 읽기/쓰기 가능, 발송 처리는 Cloud Functions
+    match /notifications/{notificationId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow create, delete: if false;
+    }
+
+    // feedback/{feedbackId} - 소유자만 생성/조회 가능
+    match /feedback/{feedbackId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // 명시적으로 정의되지 않은 모든 경로는 기본 차단
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
