@@ -17,10 +17,12 @@ const parsed = envSchema.safeParse(import.meta.env);
 if (!parsed.success) {
   const missingKeys = parsed.error.issues.map((issue) => issue.path.join('.')).join(', ');
   throw new Error(
-    `다음 환경 변수가 누락되었거나 올바르지 않습니다: ${missingKeys}\n.env.example을 참고하여 .env.local을 구성해주세요.`,
+    `다음 환경 변수가 누락되었거나 올바르지 않습니다: ${missingKeys}\n` +
+      `.env.example을 참고하여 로컬은 .env.local, 배포 환경(Vercel)은 프로젝트 환경 변수 설정을 확인해주세요.`,
   );
 }
 
 export const env = parsed.data;
 
-export const isFirebaseEmulatorEnabled = env.VITE_USE_FIREBASE_EMULATOR === 'true';
+export const isFirebaseEmulatorEnabled =
+  import.meta.env.DEV && env.VITE_USE_FIREBASE_EMULATOR === 'true';

@@ -1,10 +1,14 @@
-import { PagePlaceholder } from '@/components/common/PagePlaceholder';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '@/providers/AuthProvider';
+import { RouteLoadingFallback } from '@/components/common/RouteLoadingFallback';
+import { ROUTES } from '@/constants/routes';
 
 export default function LandingPage() {
-  return (
-    <PagePlaceholder
-      title="Re:Fill"
-      description="필요하기 전에, 먼저 채우다. 생활 소비를 예측하는 AI 플랫폼입니다."
-    />
-  );
+  const { user, isInitializing } = useAuth();
+
+  if (isInitializing) {
+    return <RouteLoadingFallback />;
+  }
+
+  return <Navigate to={user ? ROUTES.DASHBOARD : ROUTES.LOGIN} replace />;
 }

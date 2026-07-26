@@ -25,10 +25,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let isMounted = true;
-    void getCurrentUser()
+
+    const AUTH_INIT_TIMEOUT_MS = 8000;
+    const timeout = new Promise<null>((resolve) => {
+      setTimeout(() => resolve(null), AUTH_INIT_TIMEOUT_MS);
+    });
+
+    Promise.race([getCurrentUser(), timeout])
       .then((currentUser) => {
         if (isMounted) {
           setUser(currentUser);
+        }
+      })
+      .catch((error: unknown) => {
+        console.error('Firebase 인증 초기화에 실패했습니다.', error);
+        if (isMounted) {
+          setUser(null);
         }
       })
       .finally(() => {
@@ -36,6 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setIsInitializing(false);
         }
       });
+
     return () => {
       isMounted = false;
     };
