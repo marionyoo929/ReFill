@@ -1,8 +1,14 @@
 import { NavLink } from 'react-router-dom';
 import { NAV_ITEMS } from '@/constants/navigation';
+import { ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/cn';
+import { NavBadge } from '@/components/layout/NavBadge';
 
-export function BottomNavigation() {
+type BottomNavigationProps = {
+  unreadNotificationCount: number;
+};
+
+export function BottomNavigation({ unreadNotificationCount }: BottomNavigationProps) {
   return (
     <nav
       aria-label="주요 메뉴"
@@ -19,7 +25,10 @@ export function BottomNavigation() {
             )
           }
         >
-          <Icon className="h-5 w-5" aria-hidden="true" />
+          <span className="relative flex">
+            <Icon className="h-5 w-5" aria-hidden="true" />
+            {path === ROUTES.NOTIFICATIONS && <NavBadge count={unreadNotificationCount} />}
+          </span>
           {label}
         </NavLink>
       ))}

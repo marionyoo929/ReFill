@@ -1,5 +1,10 @@
-import { PagePlaceholder } from '@/components/common/PagePlaceholder';
+import { NotificationListView } from '@/features/notification';
 
 export default function NotificationPage() {
-  return <PagePlaceholder title="알림" description="소진 예정 알림 목록이 이 자리에 표시됩니다." />;
+  return (
+    <div className="mx-auto max-w-xl px-4 py-6 md:px-8">
+      <h1 className="mb-6 text-xl font-bold text-gray-900">알림</h1>
+      <NotificationListView />
+    </div>
+  );
 }

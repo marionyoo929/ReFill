@@ -4,11 +4,13 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { BottomNavigation } from '@/components/layout/BottomNavigation';
 import { FloatingAddButton } from '@/components/layout/FloatingAddButton';
 import { useAuth } from '@/providers/AuthProvider';
+import { useNotifications } from '@/features/notification';
 import { ROUTES } from '@/constants/routes';
 
 export function AppLayout() {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const { unreadCount } = useNotifications();
 
   async function handleLogout() {
     await logout();
@@ -17,7 +19,7 @@ export function AppLayout() {
 
   return (
     <div className="min-h-screen bg-gray-50 md:pl-64">
-      <Sidebar />
+      <Sidebar unreadNotificationCount={unreadCount} />
       <button
         type="button"
         onClick={() => void handleLogout()}
@@ -29,7 +31,7 @@ export function AppLayout() {
       <main className="pb-24 md:pb-8">
         <Outlet />
       </main>
-      <BottomNavigation />
+      <BottomNavigation unreadNotificationCount={unreadCount} />
       <FloatingAddButton />
     </div>
   );

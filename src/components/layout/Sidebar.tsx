@@ -1,8 +1,14 @@
 import { NavLink } from 'react-router-dom';
 import { NAV_ITEMS } from '@/constants/navigation';
+import { ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/cn';
+import { NavBadge } from '@/components/layout/NavBadge';
 
-export function Sidebar() {
+type SidebarProps = {
+  unreadNotificationCount: number;
+};
+
+export function Sidebar({ unreadNotificationCount }: SidebarProps) {
   return (
     <aside className="hidden md:fixed md:inset-y-0 md:left-0 md:flex md:w-64 md:flex-col md:border-r md:border-gray-100 md:bg-white md:px-4 md:py-6">
       <span className="px-3 text-xl font-bold text-primary-600">Re:Fill</span>
@@ -20,7 +26,10 @@ export function Sidebar() {
               )
             }
           >
-            <Icon className="h-5 w-5" aria-hidden="true" />
+            <span className="relative flex">
+              <Icon className="h-5 w-5" aria-hidden="true" />
+              {path === ROUTES.NOTIFICATIONS && <NavBadge count={unreadNotificationCount} />}
+            </span>
             {label}
           </NavLink>
         ))}
