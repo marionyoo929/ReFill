@@ -18,7 +18,9 @@ export function CalendarPreview({ items }: CalendarPreviewProps) {
   return (
     <section aria-label="이번 달 리필 예정 미리보기">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-gray-900">{format(today, 'M월')} 리필 캘린더</h2>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+          {format(today, 'M월')} 리필 캘린더
+        </h2>
         <Link
           to={ROUTES.CALENDAR}
           className="text-sm font-medium text-primary-600 hover:text-primary-700"

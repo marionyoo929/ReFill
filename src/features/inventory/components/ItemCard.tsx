@@ -14,8 +14,8 @@ export function ItemCard({ item }: ItemCardProps) {
     <Link to={ROUTES.ITEM_DETAIL.replace(':itemId', item.id)} aria-label={`${item.name} 상세보기`}>
       <Card className="flex items-center justify-between gap-3 transition-colors hover:border-primary-200">
         <div className="min-w-0">
-          <p className="truncate font-semibold text-gray-900">{item.name}</p>
-          <p className="truncate text-sm text-gray-500">
+          <p className="truncate font-semibold text-gray-900 dark:text-white">{item.name}</p>
+          <p className="truncate text-sm text-gray-500 dark:text-gray-400">
             {item.category}
             {item.brand ? ` · ${item.brand}` : ''}
           </p>
@@ -24,7 +24,7 @@ export function ItemCard({ item }: ItemCardProps) {
           <span className="rounded-2xl bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-700">
             {IMPORTANCE_LABEL[item.importance]}
           </span>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
             {format(item.expectedEndDate, 'M월 d일')} 소진 예정
           </span>
         </div>

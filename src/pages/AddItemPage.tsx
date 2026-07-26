@@ -17,7 +17,7 @@ export default function AddItemPage() {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-6 md:px-8">
-      <h1 className="mb-6 text-xl font-bold text-gray-900">물건 등록</h1>
+      <h1 className="mb-6 text-xl font-bold text-gray-900 dark:text-white">물건 등록</h1>
       <ItemForm mode="create" isSubmitting={isPending} onSubmit={handleSubmit} />
     </div>
   );

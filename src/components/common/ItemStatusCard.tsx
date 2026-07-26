@@ -21,8 +21,8 @@ export function ItemStatusCard({ name, category, remainingDays, riskLevel }: Ite
   return (
     <Card className="flex items-center justify-between gap-3">
       <div className="min-w-0">
-        <p className="truncate font-semibold text-gray-900">{name}</p>
-        <p className="truncate text-sm text-gray-500">{category}</p>
+        <p className="truncate font-semibold text-gray-900 dark:text-white">{name}</p>
+        <p className="truncate text-sm text-gray-500 dark:text-gray-400">{category}</p>
       </div>
       <div className="flex shrink-0 flex-col items-end gap-1">
         <span
@@ -30,7 +30,7 @@ export function ItemStatusCard({ name, category, remainingDays, riskLevel }: Ite
         >
           {RISK_LABEL[riskLevel]}
         </span>
-        <span className="text-sm text-gray-500">{remainingLabel}</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">{remainingLabel}</span>
       </div>
     </Card>
   );

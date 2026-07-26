@@ -54,7 +54,7 @@ export function CalendarView() {
         >
           <ChevronLeft className="h-5 w-5" aria-hidden="true" />
         </button>
-        <h1 className="text-lg font-bold text-gray-900">
+        <h1 className="text-lg font-bold text-gray-900 dark:text-white">
           {format(referenceMonth, 'yyyy년 M월', { locale: ko })}
         </h1>
         <button

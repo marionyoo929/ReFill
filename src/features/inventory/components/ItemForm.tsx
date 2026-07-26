@@ -60,7 +60,10 @@ export function ItemForm({ mode, defaultValues, isSubmitting, onSubmit }: ItemFo
       noValidate
     >
       <div>
-        <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="name"
+          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+        >
           이름
         </label>
         <Input id="name" placeholder="예: 헤드앤숄더 샴푸" {...register('name')} />
@@ -68,7 +71,10 @@ export function ItemForm({ mode, defaultValues, isSubmitting, onSubmit }: ItemFo
       </div>
 
       <div>
-        <label htmlFor="category" className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="category"
+          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+        >
           카테고리
         </label>
         <Select
@@ -89,7 +95,10 @@ export function ItemForm({ mode, defaultValues, isSubmitting, onSubmit }: ItemFo
       </div>
 
       <div>
-        <label htmlFor="brand" className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="brand"
+          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+        >
           브랜드 (선택)
         </label>
         <Input id="brand" placeholder="예: P&G" {...register('brand')} />
@@ -97,7 +106,10 @@ export function ItemForm({ mode, defaultValues, isSubmitting, onSubmit }: ItemFo
       </div>
 
       <div>
-        <label htmlFor="cycleDays" className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="cycleDays"
+          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+        >
           소비 주기 (일)
         </label>
         <Input
@@ -114,12 +126,14 @@ export function ItemForm({ mode, defaultValues, isSubmitting, onSubmit }: ItemFo
       </div>
 
       <fieldset>
-        <legend className="mb-1.5 block text-sm font-medium text-gray-700">중요도</legend>
+        <legend className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200">
+          중요도
+        </legend>
         <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
           {IMPORTANCE_OPTIONS.map((option) => (
             <label
               key={option.value}
-              className="flex cursor-pointer items-center justify-center gap-1.5 rounded-2xl border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50 has-[:checked]:text-primary-700"
+              className="flex cursor-pointer items-center justify-center gap-1.5 rounded-2xl border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50 has-[:checked]:text-primary-700 dark:text-gray-300"
             >
               <input
                 type="radio"

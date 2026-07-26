@@ -24,12 +24,14 @@ export function NotificationCard({ notification, onMarkAsRead }: NotificationCar
             <p
               className={cn(
                 'text-sm',
-                notification.read ? 'font-medium text-gray-500' : 'font-semibold text-gray-900',
+                notification.read
+                  ? 'font-medium text-gray-500 dark:text-gray-400'
+                  : 'font-semibold text-gray-900 dark:text-white',
               )}
             >
               {notification.title}
             </p>
-            <p className="mt-0.5 text-sm text-gray-500">{notification.body}</p>
+            <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{notification.body}</p>
           </div>
         </div>
         {!notification.read && (

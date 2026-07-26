@@ -17,8 +17,8 @@ export function IntroStep() {
               <Icon className="h-5 w-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
-              <p className="font-semibold text-gray-900">{title}</p>
-              <p className="text-sm text-gray-500">{description}</p>
+              <p className="font-semibold text-gray-900 dark:text-white">{title}</p>
+              <p className="text-sm text-gray-500 dark:text-[#C9CED8]">{description}</p>
             </div>
           </Card>
         ))}

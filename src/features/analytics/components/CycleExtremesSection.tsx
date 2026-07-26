@@ -17,12 +17,16 @@ export function CycleExtremesSection({
   return (
     <section aria-label="소비 주기 극단값" className="grid grid-cols-1 gap-3 md:grid-cols-2">
       <Card>
-        <p className="text-sm text-gray-500">가장 소비 주기가 짧은 물건</p>
-        <p className="mt-1 text-lg font-bold text-gray-900">{formatCycleItem(shortestCycleItem)}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">가장 소비 주기가 짧은 물건</p>
+        <p className="mt-1 text-lg font-bold text-gray-900 dark:text-white">
+          {formatCycleItem(shortestCycleItem)}
+        </p>
       </Card>
       <Card>
-        <p className="text-sm text-gray-500">가장 소비 주기가 긴 물건</p>
-        <p className="mt-1 text-lg font-bold text-gray-900">{formatCycleItem(longestCycleItem)}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">가장 소비 주기가 긴 물건</p>
+        <p className="mt-1 text-lg font-bold text-gray-900 dark:text-white">
+          {formatCycleItem(longestCycleItem)}
+        </p>
       </Card>
     </section>
   );

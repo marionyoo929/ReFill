@@ -11,7 +11,7 @@ type DayDetailPanelProps = {
 export function DayDetailPanel({ date, items }: DayDetailPanelProps) {
   return (
     <section aria-label={`${format(date, 'M월 d일')} 리필 예정 물건`}>
-      <h2 className="mb-3 text-lg font-bold text-gray-900">
+      <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-white">
         {format(date, 'M월 d일 (EEE)', { locale: ko })}
       </h2>
       {items.length === 0 ? (
