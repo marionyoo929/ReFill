@@ -1,4 +1,5 @@
 export { InventoryListView } from '@/features/inventory/components/InventoryListView';
+export { useInventoryItems } from '@/features/inventory/hooks/useInventoryItems';
 export { ItemDetailView } from '@/features/inventory/components/ItemDetailView';
 export { ItemForm } from '@/features/inventory/components/ItemForm';
 export {

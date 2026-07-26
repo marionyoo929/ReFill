@@ -4,7 +4,7 @@ import type {
   InventoryItem,
   InventoryItemInput,
 } from '@/features/inventory/types/inventory.types';
-import { calculateExpectedEndDate } from '@/features/inventory/utils/inventoryCalculations';
+import { predictEndDate } from '@/features/prediction';
 
 /**
  * 실제 Firebase 연동 전까지 사용하는 Mock Data 계층이다.
@@ -90,7 +90,7 @@ function buildItemFromSeed(seed: SeedItem): InventoryItem {
     cycleDays: seed.cycleDays,
     importance: seed.importance,
     registeredAt,
-    expectedEndDate: calculateExpectedEndDate(registeredAt, seed.cycleDays),
+    expectedEndDate: predictEndDate({ registeredAt, cycleDays: seed.cycleDays }),
   };
 }
 
@@ -117,7 +117,7 @@ export async function createInventoryItem(input: InventoryItemInput): Promise<In
     cycleDays: input.cycleDays,
     importance: input.importance,
     registeredAt,
-    expectedEndDate: calculateExpectedEndDate(registeredAt, input.cycleDays),
+    expectedEndDate: predictEndDate({ registeredAt, cycleDays: input.cycleDays }),
   };
   mockItems = [...mockItems, newItem];
   return newItem;
@@ -140,7 +140,10 @@ export async function updateInventoryItem(
     brand: input.brand || undefined,
     cycleDays: input.cycleDays,
     importance: input.importance,
-    expectedEndDate: calculateExpectedEndDate(existing.registeredAt, input.cycleDays),
+    expectedEndDate: predictEndDate({
+      registeredAt: existing.registeredAt,
+      cycleDays: input.cycleDays,
+    }),
   };
   mockItems = mockItems.map((item) => (item.id === id ? updated : item));
   return updated;

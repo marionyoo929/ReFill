@@ -1,13 +1,9 @@
-export type RiskLevel = 'danger' | 'warning' | 'success';
+import type { InventoryItem } from '@/features/inventory';
+import type { ItemStatus, RiskLevel } from '@/features/prediction';
 
-export type DashboardItem = {
-  id: string;
-  name: string;
-  category: string;
-  expectedEndDate: Date;
-  remainingDays: number;
-  riskLevel: RiskLevel;
-};
+export type { RiskLevel };
+
+export type DashboardItem = InventoryItem & ItemStatus;
 
 export type DashboardSummary = {
   totalItemCount: number;
