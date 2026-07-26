@@ -15,10 +15,12 @@ export function NotificationSettingsSection({
 }: NotificationSettingsSectionProps) {
   return (
     <Card className="flex flex-col gap-4">
-      <h2 className="text-lg font-bold text-gray-900">알림 설정</h2>
+      <h2 className="text-lg font-bold text-gray-900 dark:text-white">알림 설정</h2>
 
       <div className="flex items-center justify-between gap-3">
-        <span className="text-sm font-medium text-gray-700">알림 전체 사용</span>
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+          알림 전체 사용
+        </span>
         <button
           type="button"
           role="switch"
@@ -32,15 +34,18 @@ export function NotificationSettingsSection({
         >
           <span
             className={cn(
-              'absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform',
-              settings.notificationEnabled ? 'translate-x-[22px]' : 'translate-x-0.5',
+              'absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform',
+              settings.notificationEnabled ? 'translate-x-5' : 'translate-x-0',
             )}
           />
         </button>
       </div>
 
       <div>
-        <label htmlFor="lead-time" className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="lead-time"
+          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+        >
           소진 예정 며칠 전 알림
         </label>
         <Select

@@ -9,8 +9,10 @@ export function ThemeSettingsSection() {
   return (
     <Card className="flex items-center justify-between gap-3">
       <div>
-        <h2 className="text-lg font-bold text-gray-900">테마</h2>
-        <p className="mt-0.5 text-sm text-gray-500">다크 모드를 켜거나 끌 수 있어요.</p>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white">테마</h2>
+        <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
+          다크 모드를 켜거나 끌 수 있어요.
+        </p>
       </div>
       <button
         type="button"

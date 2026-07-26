@@ -18,13 +18,13 @@ export function AppLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 md:pl-64">
+    <div className="min-h-screen bg-gray-50 md:pl-64 dark:bg-gray-950">
       <Sidebar unreadNotificationCount={unreadCount} />
       <button
         type="button"
         onClick={() => void handleLogout()}
         aria-label="로그아웃"
-        className="fixed top-4 right-4 z-30 flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-gray-500 shadow-sm hover:bg-gray-50 md:top-6 md:right-6"
+        className="fixed top-4 right-4 z-30 flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-gray-500 shadow-sm hover:bg-gray-50 md:top-6 md:right-6 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800"
       >
         <LogOut className="h-5 w-5" aria-hidden="true" />
       </button>

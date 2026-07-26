@@ -12,7 +12,7 @@ export function BottomNavigation({ unreadNotificationCount }: BottomNavigationPr
   return (
     <nav
       aria-label="주요 메뉴"
-      className="fixed inset-x-0 bottom-0 z-20 flex items-center justify-around border-t border-gray-100 bg-white py-2 md:hidden"
+      className="fixed inset-x-0 bottom-0 z-20 flex items-center justify-around border-t border-gray-100 bg-white py-2 md:hidden dark:border-gray-800 dark:bg-gray-900"
     >
       {NAV_ITEMS.map(({ label, path, icon: Icon }) => (
         <NavLink
@@ -21,7 +21,7 @@ export function BottomNavigation({ unreadNotificationCount }: BottomNavigationPr
           className={({ isActive }) =>
             cn(
               'flex min-w-14 flex-col items-center gap-0.5 rounded-2xl px-2 py-1.5 text-xs font-medium',
-              isActive ? 'text-primary-700' : 'text-gray-400',
+              isActive ? 'text-primary-700 dark:text-primary-300' : 'text-gray-400 dark:text-gray-500',
             )
           }
         >
