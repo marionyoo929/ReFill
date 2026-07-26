@@ -100,17 +100,36 @@ npm run dev
 
 ### 5. Firebase 프로젝트 연결 (최초 1회)
 
+1. [Firebase Console](https://console.firebase.google.com)에서 새 프로젝트를 생성합니다.
+2. 프로젝트 설정 > 내 앱에서 **Web App**을 등록하고 발급된 설정 값을 확인합니다.
+3. **Authentication > Sign-in method**에서 **Email/Password** 제공업체를 활성화합니다.
+4. **Firestore Database**를 생성합니다(프로덕션 모드 권장, 위치는 가까운 리전 선택).
+5. `.env.example`을 `.env.local`로 복사하고 2번에서 확인한 값을 채워 넣습니다.
+6. Security Rules를 적용합니다.
+
 ```bash
 npm install -g firebase-tools
 firebase login
 firebase use --add   # 생성한 Firebase 프로젝트 선택
-```
-
-`firestore.rules`, `firestore.indexes.json`, `storage.rules`는 이미 저장소에 포함되어 있으며 아래 명령으로 배포합니다.
-
-```bash
 firebase deploy --only firestore:rules,firestore:indexes,storage
 ```
+
+### 6. Firebase Emulator로 로컬 테스트 (선택, 실제 프로젝트 없이도 가능)
+
+Java가 설치되어 있어야 Firestore Emulator를 사용할 수 있습니다(Auth Emulator는 Java가 필요 없습니다).
+
+```bash
+firebase emulators:start --only auth,firestore
+```
+
+`.env.local`에 아래와 같이 설정하면 앱이 로컬 Emulator에 연결됩니다. 실제 프로젝트가 없어도 `VITE_FIREBASE_PROJECT_ID`를 `demo-`로 시작하는 값으로 두면 테스트할 수 있습니다.
+
+```bash
+VITE_FIREBASE_PROJECT_ID=demo-refill
+VITE_USE_FIREBASE_EMULATOR=true
+```
+
+Emulator UI: http://127.0.0.1:4000
 
 ## 개발 원칙
 
