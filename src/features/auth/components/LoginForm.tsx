@@ -57,6 +57,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           type="email"
           placeholder="you@example.com"
           autoComplete="email"
+          className="dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-500"
           {...register('email')}
         />
         {errors.email && <p className="mt-1 text-sm text-danger-600">{errors.email.message}</p>}
@@ -74,6 +75,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           type="password"
           placeholder="6자 이상 입력해주세요"
           autoComplete="current-password"
+          className="dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-500"
           {...register('password')}
         />
         {errors.password && (
