@@ -11,6 +11,7 @@ const envSchema = z.object({
   VITE_FIREBASE_VAPID_KEY: z.string().optional(),
   VITE_USE_FIREBASE_EMULATOR: z.string().optional(),
   VITE_ANALYZE_ENDPOINT: z.string().optional(),
+  VITE_RECALCULATE_CYCLE_ENDPOINT: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(import.meta.env);

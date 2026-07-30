@@ -40,7 +40,7 @@ export function PurchaseHistoryPanel({ item, className }: PurchaseHistoryPanelPr
   }
 
   function saveEdit(index: number) {
-    if (!draftDate) {
+    if (!draftDate || updateMutation.isPending) {
       return;
     }
     const newHistory = history.map((date, i) => (i === index ? new Date(draftDate) : date));
@@ -52,6 +52,9 @@ export function PurchaseHistoryPanel({ item, className }: PurchaseHistoryPanelPr
   }
 
   function deleteEntry(index: number) {
+    if (updateMutation.isPending) {
+      return;
+    }
     const newHistory = history.filter((_, i) => i !== index);
     void updateMutation.mutateAsync({
       id: item.id,
@@ -91,16 +94,18 @@ export function PurchaseHistoryPanel({ item, className }: PurchaseHistoryPanelPr
                     <button
                       type="button"
                       onClick={() => saveEdit(index)}
+                      disabled={updateMutation.isPending}
                       aria-label="저장"
-                      className="rounded-xl p-1.5 text-primary-600 hover:bg-primary-50"
+                      className="rounded-xl p-1.5 text-primary-600 hover:bg-primary-50 disabled:opacity-50"
                     >
                       <Check className="h-4 w-4" aria-hidden="true" />
                     </button>
                     <button
                       type="button"
                       onClick={cancelEdit}
+                      disabled={updateMutation.isPending}
                       aria-label="취소"
-                      className="rounded-xl p-1.5 text-gray-400 hover:bg-gray-100"
+                      className="rounded-xl p-1.5 text-gray-400 hover:bg-gray-100 disabled:opacity-50"
                     >
                       <X className="h-4 w-4" aria-hidden="true" />
                     </button>
@@ -113,16 +118,18 @@ export function PurchaseHistoryPanel({ item, className }: PurchaseHistoryPanelPr
                     <button
                       type="button"
                       onClick={() => startEdit(index, date)}
+                      disabled={updateMutation.isPending}
                       aria-label="구매일 수정"
-                      className="rounded-xl p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+                      className="rounded-xl p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
                     >
                       <Pencil className="h-4 w-4" aria-hidden="true" />
                     </button>
                     <button
                       type="button"
                       onClick={() => deleteEntry(index)}
+                      disabled={updateMutation.isPending}
                       aria-label="구매 기록 삭제"
-                      className="rounded-xl p-1.5 text-gray-400 hover:bg-gray-100 hover:text-danger-600"
+                      className="rounded-xl p-1.5 text-gray-400 hover:bg-gray-100 hover:text-danger-600 disabled:opacity-50"
                     >
                       <Trash2 className="h-4 w-4" aria-hidden="true" />
                     </button>
