@@ -1,13 +1,31 @@
 import Busboy from 'busboy';
 import OpenAI from 'openai';
-import { initializeApp, getApps } from 'firebase-admin/app';
-import { getAuth } from 'firebase-admin/auth';
+import { createRemoteJWKSet, jwtVerify } from 'jose';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
-const firebaseApp = getApps()[0] ?? initializeApp({ projectId: process.env.FIREBASE_PROJECT_ID });
+// firebase-admin은 jwks-rsa -> jose(ESM 전용) 조합이 Vercel의 CJS 런타임에서
+// require()에 실패해 함수가 죽는다. Firebase ID 토큰은 Google의 공개 JWKS로
+// 직접 검증해 firebase-admin 의존성 자체를 없앤다.
+const FIREBASE_JWKS = createRemoteJWKSet(
+  new URL('https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com'),
+);
+
+async function verifyFirebaseIdToken(idToken: string): Promise<void> {
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  if (!projectId) {
+    throw new Error('FIREBASE_PROJECT_ID가 설정되지 않았습니다.');
+  }
+  const { payload } = await jwtVerify(idToken, FIREBASE_JWKS, {
+    issuer: `https://securetoken.google.com/${projectId}`,
+    audience: projectId,
+  });
+  if (!payload.sub) {
+    throw new Error('유효하지 않은 토큰입니다.');
+  }
+}
 
 const SYSTEM_PROMPT = `You are a product identification assistant for a household inventory/repurchase tracker app.
 
@@ -109,7 +127,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       res.status(401).json({ status: 'error', message: 'Authorization header missing' });
       return;
     }
-    await getAuth(firebaseApp).verifyIdToken(match[1]);
+    await verifyFirebaseIdToken(match[1]);
 
     const image = await readUploadedImage(req);
     if (!image) {
