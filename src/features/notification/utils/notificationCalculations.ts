@@ -45,7 +45,7 @@ export function buildNotificationsFromItems(
   items: EnrichedInventoryItem[],
 ): Omit<NotificationItem, 'read'>[] {
   return items
-    .map((item) => {
+    .map((item): Omit<NotificationItem, 'read'> | null => {
       const type = getNotificationType(item);
       if (!type) {
         return null;
@@ -60,6 +60,10 @@ export function buildNotificationsFromItems(
         title: NOTIFICATION_TITLE[type],
         body: buildNotificationBody(item, type),
         expectedEndDate: item.expectedEndDate,
+        // 구매 URL 은 필드명과 달리 brand 에 저장돼 있다. ItemForm 이 이 입력을
+        // "구매 URL (선택)" 로 라벨링하고, 카메라 분석 결과도 parseAnalyzedItem 에서
+        // purchase_url -> brand 로 옮겨 담는다. 값 검증은 서버에서 한 곳으로 모은다.
+        purchaseUrl: item.brand,
       };
     })
     .filter((notification): notification is Omit<NotificationItem, 'read'> => notification !== null)

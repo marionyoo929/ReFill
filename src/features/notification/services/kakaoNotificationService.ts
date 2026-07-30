@@ -20,6 +20,8 @@ export type KakaoNotificationPayloadItem = {
   itemName: string;
   remainingDays: number;
   type: NotificationType;
+  /** 구매 버튼 링크로 쓴다. 값이 없거나 URL 이 아니면 서버가 검색 링크를 만든다. */
+  purchaseUrl?: string;
 };
 
 type KakaoSendResponse =
@@ -47,10 +49,11 @@ const ENDPOINT = env.VITE_KAKAO_SEND_ENDPOINT || '/api/kakao-send';
 export function toKakaoPayloadItems(
   notifications: NotificationItem[],
 ): KakaoNotificationPayloadItem[] {
-  return notifications.map(({ itemName, remainingDays, type }) => ({
+  return notifications.map(({ itemName, remainingDays, type, purchaseUrl }) => ({
     itemName,
     remainingDays,
     type,
+    purchaseUrl,
   }));
 }
 

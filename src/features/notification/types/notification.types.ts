@@ -13,4 +13,6 @@ export type NotificationItem = {
   body: string;
   expectedEndDate: Date;
   read: boolean;
+  /** 물건에 저장된 구매 URL. 값이 없거나 URL 형식이 아닐 수 있다. */
+  purchaseUrl?: string;
 };

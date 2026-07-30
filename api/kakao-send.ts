@@ -272,12 +272,17 @@ async function refreshAccessToken(refreshToken: string): Promise<{
 }
 
 /** 성공 시 카카오는 { result_code: 0 } 을 반환한다. */
-async function sendMemoText(accessToken: string, text: string): Promise<void> {
+async function sendMemoText(
+  accessToken: string,
+  text: string,
+  buttons: KakaoButton[],
+): Promise<void> {
+  // button_title 과 buttons 를 함께 주면 동작이 모호해지므로 buttons 만 쓴다.
   const templateObject = {
     object_type: 'text',
     text,
-    link: { web_url: APP_URL, mobile_web_url: APP_URL },
-    button_title: BUTTON_TITLE,
+    link: toLink(APP_URL),
+    buttons,
   };
 
   const response = await fetch(KAKAO_MEMO_SEND_ENDPOINT, {
@@ -312,6 +317,8 @@ type KakaoNotificationItem = {
   itemName: string;
   remainingDays: number;
   type: KakaoNotificationType;
+  /** 물건에 저장된 구매 URL. 클라이언트는 검증 없이 그대로 보낸다. */
+  purchaseUrl?: string;
 };
 
 const HEADER = '[Re:Fill] 소진 임박 알림';
@@ -328,8 +335,20 @@ function isKakaoNotificationItem(value: unknown): value is KakaoNotificationItem
     item.itemName.length > 0 &&
     typeof item.remainingDays === 'number' &&
     Number.isFinite(item.remainingDays) &&
-    (item.type === 'upcoming' || item.type === 'today' || item.type === 'overdue')
+    (item.type === 'upcoming' || item.type === 'today' || item.type === 'overdue') &&
+    (item.purchaseUrl === undefined || typeof item.purchaseUrl === 'string')
   );
+}
+
+/**
+ * 급한 순으로 정렬한다. 본문 첫 줄과 구매 버튼이 같은 물건을 가리켜야 하므로
+ * 본문 생성과 버튼 생성이 반드시 이 함수를 함께 써야 한다.
+ */
+function sortNotificationItems(items: KakaoNotificationItem[]): KakaoNotificationItem[] {
+  return [...items].sort((a, b) => {
+    const byType = TYPE_ORDER[a.type] - TYPE_ORDER[b.type];
+    return byType !== 0 ? byType : a.remainingDays - b.remainingDays;
+  });
 }
 
 function formatLine({ itemName, remainingDays, type }: KakaoNotificationItem): string {
@@ -352,12 +371,7 @@ function formatNotificationText(
     return `${HEADER}\n소진 임박한 소모품이 없습니다.`;
   }
 
-  const sorted = [...items].sort((a, b) => {
-    const byType = TYPE_ORDER[a.type] - TYPE_ORDER[b.type];
-    return byType !== 0 ? byType : a.remainingDays - b.remainingDays;
-  });
-
-  const lines = sorted.map(formatLine);
+  const lines = sortNotificationItems(items).map(formatLine);
 
   const assemble = (visibleCount: number): string => {
     const hidden = lines.length - visibleCount;
@@ -376,6 +390,63 @@ function formatNotificationText(
 }
 
 // ---------------------------------------------------------------------------
+// 구매 링크 버튼
+// ---------------------------------------------------------------------------
+
+type KakaoButton = { title: string; link: { web_url: string; mobile_web_url: string } };
+
+/** 버튼 제목이 길면 잘려 보이므로 물건 이름을 짧게 줄인다. */
+const BUTTON_NAME_MAX_LENGTH = 8;
+
+/** api/analyze.ts 의 buildCoupangSearchUrl 과 같은 규칙. 단 용량/단위는 알림 payload 에 없다. */
+function buildCoupangSearchUrl(name: string): string {
+  return `https://www.coupang.com/np/search?component=&q=${encodeURIComponent(name)}`;
+}
+
+/**
+ * 구매 버튼이 열 주소를 정한다.
+ *
+ * 물건의 구매 URL 은 brand 필드에 저장되는데 입력에 형식 검증이 없어서
+ * 브랜드명('P&G')이 들어있을 수도 있다. http(s) 로 파싱되는 경우에만 그대로 쓰고,
+ * 그 외에는 물건 이름으로 쿠팡 검색 링크를 만들어 항상 유효한 링크를 보장한다.
+ */
+function resolvePurchaseUrl(item: KakaoNotificationItem): string {
+  const candidate = item.purchaseUrl?.trim();
+  if (candidate) {
+    try {
+      const parsed = new URL(candidate);
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        return candidate;
+      }
+    } catch {
+      // URL 이 아니면 아래 검색 링크로 넘어간다.
+    }
+  }
+  return buildCoupangSearchUrl(item.itemName);
+}
+
+function toLink(url: string) {
+  return { web_url: url, mobile_web_url: url };
+}
+
+/** 카카오 text 템플릿은 버튼을 최대 2개까지만 허용한다. */
+function buildButtons(items: KakaoNotificationItem[]): KakaoButton[] {
+  const appButton: KakaoButton = { title: BUTTON_TITLE, link: toLink(APP_URL) };
+
+  const [mostUrgent] = sortNotificationItems(items);
+  if (!mostUrgent) {
+    return [appButton];
+  }
+
+  const name =
+    mostUrgent.itemName.length > BUTTON_NAME_MAX_LENGTH
+      ? `${mostUrgent.itemName.slice(0, BUTTON_NAME_MAX_LENGTH)}…`
+      : mostUrgent.itemName;
+
+  return [{ title: `${name} 사러가기`, link: toLink(resolvePurchaseUrl(mostUrgent)) }, appButton];
+}
+
+// ---------------------------------------------------------------------------
 // 핸들러
 // ---------------------------------------------------------------------------
 
@@ -384,11 +455,14 @@ type RequestBody = {
   items?: unknown[];
 };
 
-/** text 가 있으면 우선하고, 없으면 items 로 본문을 만든다. 둘 다 없으면 테스트 문구. */
-function resolveText(body: RequestBody): string {
+/**
+ * text 가 있으면 우선하고, 없으면 items 로 본문을 만든다. 둘 다 없으면 테스트 문구.
+ * 구매 버튼을 만들려면 검증된 items 가 필요하므로 본문과 함께 돌려준다.
+ */
+function resolveMessage(body: RequestBody): { text: string; items: KakaoNotificationItem[] } {
   const trimmed = body.text?.trim();
   if (trimmed) {
-    return truncateForKakao(trimmed);
+    return { text: truncateForKakao(trimmed), items: [] };
   }
   if (Array.isArray(body.items)) {
     const items = body.items.map((item) => {
@@ -397,9 +471,9 @@ function resolveText(body: RequestBody): string {
       }
       return item;
     });
-    return formatNotificationText(items);
+    return { text: formatNotificationText(items), items };
   }
-  return DEFAULT_TEXT;
+  return { text: DEFAULT_TEXT, items: [] };
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -425,13 +499,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const body = (typeof req.body === 'object' && req.body !== null ? req.body : {}) as RequestBody;
 
-    let text: string;
+    let message: { text: string; items: KakaoNotificationItem[] };
     try {
-      text = resolveText(body);
+      message = resolveMessage(body);
     } catch {
       res.status(400).json({ status: 'error', code: 'invalid-argument' });
       return;
     }
+    const { text } = message;
 
     const storedRefreshToken = await getRefreshToken(uid);
     if (!storedRefreshToken) {
@@ -445,9 +520,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       await updateRefreshToken(uid, refreshed.refreshToken);
     }
 
-    await sendMemoText(refreshed.accessToken, text);
+    const buttons = buildButtons(message.items);
+    await sendMemoText(refreshed.accessToken, text, buttons);
 
-    console.log('카카오 발송 성공', { uid, length: text.length });
+    console.log('카카오 발송 성공', { uid, length: text.length, buttons: buttons.length });
     res.status(200).json({ status: 'ok', text });
   } catch (error) {
     if (error instanceof ConfigError) {
