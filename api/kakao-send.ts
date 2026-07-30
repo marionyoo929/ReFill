@@ -39,10 +39,25 @@ const FIREBASE_JWKS = createRemoteJWKSet(
   ),
 );
 
+/**
+ * 배포 환경 변수가 없거나 형식이 잘못된 경우.
+ * 일반 오류(500 internal)와 구분해서 어떤 변수가 문제인지 알 수 있게 한다.
+ * detail 에는 변수 "이름"만 담는다 — 값은 절대 응답에 싣지 않는다.
+ */
+class ConfigError extends Error {
+  readonly detail: string;
+
+  constructor(detail: string) {
+    super(`설정 오류: ${detail}`);
+    this.name = 'ConfigError';
+    this.detail = detail;
+  }
+}
+
 function requireProjectId(): string {
   const projectId = process.env.FIREBASE_PROJECT_ID;
   if (!projectId) {
-    throw new Error('FIREBASE_PROJECT_ID가 설정되지 않았습니다.');
+    throw new ConfigError('FIREBASE_PROJECT_ID 없음');
   }
   return projectId;
 }
@@ -74,15 +89,34 @@ async function getGoogleAccessToken(): Promise<string> {
     return cachedAccessToken.token;
   }
 
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL?.trim();
   const rawPrivateKey = process.env.FIREBASE_PRIVATE_KEY;
-  if (!clientEmail || !rawPrivateKey) {
-    throw new Error('FIREBASE_CLIENT_EMAIL / FIREBASE_PRIVATE_KEY가 설정되지 않았습니다.');
+  if (!clientEmail) {
+    throw new ConfigError('FIREBASE_CLIENT_EMAIL 없음');
   }
-  // Vercel 환경 변수에는 개행을 \n 문자열로 넣게 되므로 실제 개행으로 되돌린다.
-  const privateKey = rawPrivateKey.replace(/\\n/g, '\n');
+  if (!rawPrivateKey) {
+    throw new ConfigError('FIREBASE_PRIVATE_KEY 없음');
+  }
 
-  const key = await importPKCS8(privateKey, 'RS256');
+  // 환경 변수 UI 로 키를 옮기는 과정에서 흔히 깨지는 두 가지를 흡수한다.
+  //  - JSON 에서 값을 복사할 때 딸려오는 양끝 큰따옴표
+  //  - 개행이 \n 두 글자로 들어오는 경우 (실제 개행으로 넣었다면 그대로 통과한다)
+  const privateKey = rawPrivateKey
+    .trim()
+    .replace(/^["']|["']$/g, '')
+    .replace(/\\n/g, '\n')
+    .trim();
+
+  if (!privateKey.startsWith('-----BEGIN')) {
+    throw new ConfigError('FIREBASE_PRIVATE_KEY 형식 오류 (-----BEGIN 으로 시작해야 함)');
+  }
+
+  let key;
+  try {
+    key = await importPKCS8(privateKey, 'RS256');
+  } catch {
+    throw new ConfigError('FIREBASE_PRIVATE_KEY 파싱 실패 (개행이 보존됐는지 확인)');
+  }
   const assertion = await new SignJWT({ scope: FIRESTORE_SCOPE })
     .setProtectedHeader({ alg: 'RS256' })
     .setIssuer(clientEmail)
@@ -203,9 +237,9 @@ async function refreshAccessToken(refreshToken: string): Promise<{
   accessToken: string;
   refreshToken?: string;
 }> {
-  const restApiKey = process.env.KAKAO_REST_API_KEY;
+  const restApiKey = process.env.KAKAO_REST_API_KEY?.trim();
   if (!restApiKey) {
-    throw new Error('KAKAO_REST_API_KEY가 설정되지 않았습니다.');
+    throw new ConfigError('KAKAO_REST_API_KEY 없음');
   }
 
   const body: Record<string, string> = {
@@ -213,7 +247,7 @@ async function refreshAccessToken(refreshToken: string): Promise<{
     client_id: restApiKey,
     refresh_token: refreshToken,
   };
-  const clientSecret = process.env.KAKAO_CLIENT_SECRET;
+  const clientSecret = process.env.KAKAO_CLIENT_SECRET?.trim();
   if (clientSecret) body.client_secret = clientSecret;
 
   const response = await fetch(KAKAO_TOKEN_ENDPOINT, {
@@ -416,6 +450,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.log('카카오 발송 성공', { uid, length: text.length });
     res.status(200).json({ status: 'ok', text });
   } catch (error) {
+    if (error instanceof ConfigError) {
+      // 배포 환경 변수 문제는 재시도해도 소용없으므로 별도 코드로 알린다.
+      console.error('kakao-send 설정 오류:', error.detail);
+      res.status(500).json({ status: 'error', code: 'server-misconfigured', detail: error.detail });
+      return;
+    }
     if (error instanceof KakaoApiError) {
       console.error('카카오 발송 실패', { uid, code: error.code, message: error.message });
       if (error.requiresReauth) {

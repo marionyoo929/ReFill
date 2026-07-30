@@ -24,16 +24,19 @@ export type KakaoNotificationPayloadItem = {
 
 type KakaoSendResponse =
   | { status: 'ok'; text: string }
-  | { status: 'error'; code?: string };
+  | { status: 'error'; code?: string; detail?: string };
 
 /** 서버가 내려준 에러 코드를 보존해 호출부에서 문구로 바꿀 수 있게 한다. */
 export class KakaoSendError extends Error {
   readonly code: string;
+  /** 배포 설정 오류일 때 문제가 된 환경 변수 이름 (값은 담기지 않는다). */
+  readonly detail?: string;
 
-  constructor(code: string) {
+  constructor(code: string, detail?: string) {
     super(`카카오 발송 실패: ${code}`);
     this.name = 'KakaoSendError';
     this.code = code;
+    this.detail = detail;
   }
 }
 
@@ -74,8 +77,8 @@ export async function sendKakaoNotification(notifications: NotificationItem[]): 
   const data: unknown = await response.json().catch(() => null);
 
   if (!response.ok || !isKakaoSendResponse(data) || data.status !== 'ok') {
-    const code = isKakaoSendResponse(data) && data.status === 'error' ? data.code : undefined;
-    throw new KakaoSendError(code ?? 'internal');
+    const error = isKakaoSendResponse(data) && data.status === 'error' ? data : undefined;
+    throw new KakaoSendError(error?.code ?? 'internal', error?.detail);
   }
 
   return data.text;
@@ -98,6 +101,9 @@ export function toKakaoErrorMessage(error: unknown): string {
       return '알림 내용을 만들지 못했습니다. 새로고침 후 다시 시도해 주세요.';
     case 'kakao-unavailable':
       return '카카오 메시지 발송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+    case 'server-misconfigured':
+      // 재시도해도 소용없는 배포 설정 문제라, 어떤 변수가 문제인지 그대로 보여준다.
+      return `서버 설정 오류: ${error.detail ?? '배포 환경 변수를 확인해 주세요.'}`;
     default:
       return '카카오 발송 중 오류가 발생했습니다.';
   }
