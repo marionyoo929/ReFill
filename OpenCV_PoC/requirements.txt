@@ -1,7 +1,0 @@
-opencv-python
-numpy
-anthropic
-python-dotenv
-firebase-admin
-flask
-flask-cors
