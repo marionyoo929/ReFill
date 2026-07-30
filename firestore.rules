@@ -67,6 +67,12 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // kakao_tokens/{uid} - 카카오 리프레시 토큰 보관.
+    // 실질적인 자격증명이므로 클라이언트 접근을 전면 차단하고 Cloud Functions(Admin SDK)만 접근한다.
+    match /kakao_tokens/{userId} {
+      allow read, write: if false;
+    }
+
     // 명시적으로 정의되지 않은 모든 경로는 기본 차단
     match /{document=**} {
       allow read, write: if false;
