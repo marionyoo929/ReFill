@@ -12,6 +12,9 @@ functions/lib
 .env.local
 .env.*.local
 
+# Kakao 로컬 토큰 (60일간 유효한 refresh token 포함, 절대 커밋 금지)
+scripts/kakao/.token.local.json
+
 # Firebase
 .firebase
 firebase-debug.log
