@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import { Pencil, Trash2, Check, X } from 'lucide-react';
+import { Pencil, Trash2, Check, X, Plus } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { useUpdateInventoryItem } from '@/features/inventory/hooks/useInventoryMutations';
 import { buildPurchaseHistoryUpdateInput } from '@/features/inventory/utils/purchaseHistory';
@@ -23,11 +23,43 @@ export function PurchaseHistoryPanel({ item, className }: PurchaseHistoryPanelPr
   const updateMutation = useUpdateInventoryItem();
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [draftDate, setDraftDate] = useState('');
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [newDate, setNewDate] = useState(format(new Date(), 'yyyy-MM-dd'));
 
   const history = item.purchaseHistory ?? [];
   const rows = history
     .map((date, index) => ({ date, index }))
     .sort((a, b) => b.date.getTime() - a.date.getTime());
+
+  useEffect(() => {
+    if (!isAddOpen) {
+      return;
+    }
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setIsAddOpen(false);
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isAddOpen]);
+
+  function openAdd() {
+    setNewDate(format(new Date(), 'yyyy-MM-dd'));
+    setIsAddOpen(true);
+  }
+
+  function addPurchase() {
+    if (!newDate || updateMutation.isPending) {
+      return;
+    }
+    const newHistory = [...history, new Date(newDate)];
+    void updateMutation.mutateAsync({
+      id: item.id,
+      input: buildPurchaseHistoryUpdateInput(item, newHistory),
+    });
+    setIsAddOpen(false);
+  }
 
   function startEdit(index: number, date: Date) {
     setEditingIndex(index);
@@ -72,7 +104,18 @@ export function PurchaseHistoryPanel({ item, className }: PurchaseHistoryPanelPr
         className,
       )}
     >
-      <p className="mb-3 shrink-0 text-sm font-medium text-gray-700">구매 내역</p>
+      <div className="mb-3 flex shrink-0 items-center justify-between">
+        <p className="text-sm font-medium text-gray-700">구매 내역</p>
+        <button
+          type="button"
+          onClick={openAdd}
+          disabled={updateMutation.isPending}
+          aria-label="구매일 추가"
+          className="rounded-xl p-1.5 text-primary-600 hover:bg-primary-50 disabled:opacity-50"
+        >
+          <Plus className="h-4 w-4" aria-hidden="true" />
+        </button>
+      </div>
       {rows.length === 0 ? (
         <p className="text-sm text-gray-500">구매 기록이 없습니다.</p>
       ) : (
@@ -138,6 +181,43 @@ export function PurchaseHistoryPanel({ item, className }: PurchaseHistoryPanelPr
               )}
             </div>
           ))}
+        </div>
+      )}
+
+      {isAddOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="구매일 추가"
+            className="w-full max-w-xs rounded-2xl bg-white p-5 shadow-lg"
+          >
+            <p className="mb-3 text-sm font-medium text-gray-700">구매일 추가</p>
+            <input
+              type="date"
+              value={newDate}
+              onChange={(event) => setNewDate(event.target.value)}
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+            />
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setIsAddOpen(false)}
+                disabled={updateMutation.isPending}
+                className="rounded-2xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                onClick={addPurchase}
+                disabled={updateMutation.isPending}
+                className="rounded-2xl bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
+              >
+                추가
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
