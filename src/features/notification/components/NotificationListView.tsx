@@ -1,4 +1,6 @@
+import { MessageCircle } from 'lucide-react';
 import { useNotifications } from '@/features/notification/hooks/useNotifications';
+import { useSendKakaoNotification } from '@/features/notification/hooks/useSendKakaoNotification';
 import { NotificationCard } from '@/features/notification/components/NotificationCard';
 import { NotificationEmptyState } from '@/features/notification/components/NotificationEmptyState';
 import { NotificationSkeleton } from '@/features/notification/components/NotificationSkeleton';
@@ -15,6 +17,7 @@ export function NotificationListView() {
     markAllAsRead,
     isMarkingAllAsRead,
   } = useNotifications();
+  const { sendToKakao, isSending } = useSendKakaoNotification();
   const { showToast } = useToast();
 
   async function handleMarkAllAsRead() {
@@ -52,6 +55,19 @@ export function NotificationListView() {
           </button>
         )}
       </div>
+      {/* 읽지 않은 것만이 아니라 목록 전체를 보낸다. 서버가 하나의 요약 메시지를 만들기 때문에
+          미읽음만 보내면 "전체 읽음 처리" 직후 빈 메시지가 나간다. */}
+      <button
+        type="button"
+        onClick={() => {
+          sendToKakao(notifications);
+        }}
+        disabled={isSending}
+        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-700 disabled:opacity-50"
+      >
+        <MessageCircle className="h-4 w-4" aria-hidden="true" />
+        {isSending ? '보내는 중...' : '카카오톡으로 보내기'}
+      </button>
       <div className="flex flex-col gap-4">
         {notifications.map((notification) => (
           <NotificationCard

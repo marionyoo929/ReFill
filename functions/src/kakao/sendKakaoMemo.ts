@@ -22,8 +22,12 @@ import {
 const kakaoRestApiKey = defineSecret('KAKAO_REST_API_KEY');
 const kakaoClientSecret = defineSecret('KAKAO_CLIENT_SECRET');
 
-/** 카카오 메시지 버튼이 여는 주소. 배포 시 환경 변수로 덮어쓴다. */
-const APP_URL = process.env.KAKAO_LINK_URL || 'https://refill-7ec10.web.app';
+/**
+ * 카카오 메시지 버튼이 여는 주소. 배포 시 환경 변수로 덮어쓴다.
+ * 기본값은 Vercel 운영 배포 주소다. firebase.json 에 hosting 블록이 없으므로
+ * *.web.app 주소를 기본값으로 두면 안 된다 (404 페이지가 열린다).
+ */
+const APP_URL = process.env.KAKAO_LINK_URL || 'https://re-fill-sand.vercel.app';
 
 const DEFAULT_TEXT = '[Re:Fill] 카카오톡 연동 테스트 메시지입니다.';
 
