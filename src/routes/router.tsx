@@ -13,6 +13,7 @@ const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
 const InventoryPage = lazy(() => import('@/pages/InventoryPage'));
 const ItemDetailPage = lazy(() => import('@/pages/ItemDetailPage'));
 const AddItemPage = lazy(() => import('@/pages/AddItemPage'));
+const NotificationPage = lazy(() => import('@/pages/NotificationPage'));
 const SettingsPage = lazy(() => import('@/pages/SettingsPage'));
 const ProfilePage = lazy(() => import('@/pages/ProfilePage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
@@ -42,6 +43,7 @@ export const router = createBrowserRouter([
       { path: ROUTES.INVENTORY, element: withSuspense(<InventoryPage />) },
       { path: ROUTES.ITEM_DETAIL, element: withSuspense(<ItemDetailPage />) },
       { path: ROUTES.ADD_ITEM, element: withSuspense(<AddItemPage />) },
+      { path: ROUTES.NOTIFICATIONS, element: withSuspense(<NotificationPage />) },
       { path: ROUTES.SETTINGS, element: withSuspense(<SettingsPage />) },
       { path: ROUTES.PROFILE, element: withSuspense(<ProfilePage />) },
     ],

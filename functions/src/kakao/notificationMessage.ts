@@ -7,7 +7,7 @@
  *
  * scripts/kakao/notificationMessage.mjs 와 동일한 문구를 만들어야 한다.
  */
-import { TEXT_MAX_LENGTH } from './kakaoClient';
+import { TEXT_MAX_LENGTH, truncateForKakao } from './kakaoClient';
 
 export type KakaoNotificationType = 'upcoming' | 'today' | 'overdue';
 
@@ -78,5 +78,7 @@ export function formatNotificationText(
   for (let visible = lines.length - 1; visible >= 1 && text.length > maxLength; visible -= 1) {
     text = assemble(visible);
   }
-  return text;
+  // 항목 하나만 남겨도 길이를 넘기는 경우(이름이 아주 긴 소모품)에는 잘라낸다.
+  // scripts/kakao/notificationMessage.mjs 의 마지막 처리와 동일하다.
+  return truncateForKakao(text, maxLength);
 }

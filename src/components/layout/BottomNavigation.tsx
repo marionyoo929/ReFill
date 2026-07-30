@@ -1,6 +1,9 @@
 import { NavLink } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { NAV_ITEMS } from '@/constants/navigation';
+import { ROUTES } from '@/constants/routes';
+import { NavBadge } from '@/components/layout/NavBadge';
+import { useNotifications } from '@/features/notification';
 import { cn } from '@/lib/cn';
 
 type BottomNavigationProps = {
@@ -8,6 +11,8 @@ type BottomNavigationProps = {
 };
 
 export function BottomNavigation({ onLogout }: BottomNavigationProps) {
+  const { unreadCount } = useNotifications();
+
   return (
     <nav
       aria-label="주요 메뉴"
@@ -26,6 +31,7 @@ export function BottomNavigation({ onLogout }: BottomNavigationProps) {
         >
           <span className="relative flex">
             <Icon className="h-5 w-5" aria-hidden="true" />
+            {path === ROUTES.NOTIFICATIONS && <NavBadge count={unreadCount} />}
           </span>
           {label}
         </NavLink>
