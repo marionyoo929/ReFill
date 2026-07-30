@@ -40,7 +40,7 @@ export function NotificationListView() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500 dark:text-gray-400">읽지 않은 알림 {unreadCount}개</p>
+        <p className="text-sm text-gray-500">읽지 않은 알림 {unreadCount}개</p>
         {unreadCount > 0 && (
           <button
             type="button"

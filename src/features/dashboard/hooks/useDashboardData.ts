@@ -4,17 +4,20 @@ import { buildDashboardSummary } from '@/features/dashboard/utils/dashboardCalcu
 import type { DashboardData } from '@/features/dashboard/types/dashboard.types';
 
 export function useDashboardData() {
-  const { data: upcomingItems, isLoading, isError } = useEnrichedInventoryItems();
+  const { data: items, isLoading, isError } = useEnrichedInventoryItems();
 
   const data: DashboardData | undefined = useMemo(() => {
-    if (!upcomingItems) {
+    if (!items) {
       return undefined;
     }
+
+    const overdueItems = items.filter((item) => item.remainingDays <= 0);
+
     return {
-      summary: buildDashboardSummary(upcomingItems),
-      upcomingItems,
+      summary: buildDashboardSummary(items),
+      upcomingItems: overdueItems,
     };
-  }, [upcomingItems]);
+  }, [items]);
 
   return { data, isLoading, isError };
 }

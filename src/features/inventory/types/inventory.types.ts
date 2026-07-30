@@ -1,20 +1,25 @@
-export type ImportanceLevel = 'essential' | 'important' | 'normal' | 'low';
-
 export type InventoryItem = {
   id: string;
   name: string;
-  category: string;
   brand?: string;
   cycleDays: number;
-  importance: ImportanceLevel;
+  capacityValue?: number;
+  capacityUnit?: string;
   registeredAt: Date;
   expectedEndDate: Date;
+  purchaseHistory?: Date[];
+  notificationEnabled?: boolean;
+  notificationLeadTimeDays?: number;
 };
 
 export type InventoryItemInput = {
   name: string;
-  category: string;
   brand?: string;
   cycleDays: number;
-  importance: ImportanceLevel;
+  capacityValue?: number;
+  capacityUnit?: string;
+  registeredAt?: Date;
+  purchaseHistory?: Date[];
+  notificationEnabled?: boolean;
+  notificationLeadTimeDays?: number;
 };

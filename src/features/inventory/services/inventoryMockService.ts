@@ -1,10 +1,6 @@
 import { subDays } from 'date-fns';
-import type {
-  ImportanceLevel,
-  InventoryItem,
-  InventoryItemInput,
-} from '@/features/inventory/types/inventory.types';
-import { predictEndDate } from '@/features/prediction';
+import type { InventoryItem, InventoryItemInput } from '@/features/inventory/types/inventory.types';
+import { predictEndDate, getPredictionBasisDate } from '@/features/prediction';
 
 /**
  * 실제 Firebase 연동 전까지 사용하는 Mock Data 계층이다.
@@ -20,10 +16,8 @@ function delay(): Promise<void> {
 type SeedItem = {
   id: string;
   name: string;
-  category: string;
   brand?: string;
   cycleDays: number;
-  importance: ImportanceLevel;
   daysAgoRegistered: number;
 };
 
@@ -31,51 +25,39 @@ const SEED_ITEMS: SeedItem[] = [
   {
     id: '1',
     name: '칫솔',
-    category: '위생용품',
     cycleDays: 30,
-    importance: 'essential',
     daysAgoRegistered: 29,
   },
   {
     id: '2',
     name: '헤드앤숄더 샴푸',
-    category: '위생용품',
     brand: 'P&G',
     cycleDays: 45,
-    importance: 'essential',
     daysAgoRegistered: 43,
   },
   {
     id: '3',
     name: '다우니 세탁세제',
-    category: '생활용품',
     brand: '다우니',
     cycleDays: 60,
-    importance: 'important',
     daysAgoRegistered: 55,
   },
   {
     id: '4',
     name: '마스크',
-    category: '위생용품',
     cycleDays: 20,
-    importance: 'important',
     daysAgoRegistered: 14,
   },
   {
     id: '5',
     name: '화장지',
-    category: '생활용품',
     cycleDays: 25,
-    importance: 'normal',
     daysAgoRegistered: 15,
   },
   {
     id: '6',
     name: '캡슐커피',
-    category: '식품',
     cycleDays: 40,
-    importance: 'low',
     daysAgoRegistered: 25,
   },
 ];
@@ -85,12 +67,15 @@ function buildItemFromSeed(seed: SeedItem): InventoryItem {
   return {
     id: seed.id,
     name: seed.name,
-    category: seed.category,
     brand: seed.brand,
     cycleDays: seed.cycleDays,
-    importance: seed.importance,
+    capacityValue: undefined,
+    capacityUnit: undefined,
     registeredAt,
     expectedEndDate: predictEndDate({ registeredAt, cycleDays: seed.cycleDays }),
+    purchaseHistory: [],
+    notificationEnabled: true,
+    notificationLeadTimeDays: 7,
   };
 }
 
@@ -108,16 +93,20 @@ export async function getInventoryItemById(id: string): Promise<InventoryItem | 
 
 export async function createInventoryItem(input: InventoryItemInput): Promise<InventoryItem> {
   await delay();
-  const registeredAt = new Date();
+  const registeredAt = input.registeredAt ?? new Date();
+  const basisDate = getPredictionBasisDate(registeredAt, input.purchaseHistory);
   const newItem: InventoryItem = {
     id: crypto.randomUUID(),
     name: input.name,
-    category: input.category,
     brand: input.brand || undefined,
     cycleDays: input.cycleDays,
-    importance: input.importance,
+    capacityValue: input.capacityValue,
+    capacityUnit: input.capacityUnit,
     registeredAt,
-    expectedEndDate: predictEndDate({ registeredAt, cycleDays: input.cycleDays }),
+    expectedEndDate: predictEndDate({ registeredAt: basisDate, cycleDays: input.cycleDays }),
+    purchaseHistory: input.purchaseHistory ?? [],
+    notificationEnabled: input.notificationEnabled ?? true,
+    notificationLeadTimeDays: input.notificationLeadTimeDays ?? 7,
   };
   mockItems = [...mockItems, newItem];
   return newItem;
@@ -133,17 +122,25 @@ export async function updateInventoryItem(
     throw new Error('물건을 찾을 수 없습니다.');
   }
 
+  const registeredAt = input.registeredAt ?? existing.registeredAt;
+  const purchaseHistory = input.purchaseHistory ?? existing.purchaseHistory;
+  const basisDate = getPredictionBasisDate(registeredAt, purchaseHistory);
+
   const updated: InventoryItem = {
     ...existing,
     name: input.name,
-    category: input.category,
     brand: input.brand || undefined,
     cycleDays: input.cycleDays,
-    importance: input.importance,
+    capacityValue: input.capacityValue,
+    capacityUnit: input.capacityUnit,
+    registeredAt,
     expectedEndDate: predictEndDate({
-      registeredAt: existing.registeredAt,
+      registeredAt: basisDate,
       cycleDays: input.cycleDays,
     }),
+    purchaseHistory,
+    notificationEnabled: input.notificationEnabled ?? existing.notificationEnabled,
+    notificationLeadTimeDays: input.notificationLeadTimeDays ?? existing.notificationLeadTimeDays,
   };
   mockItems = mockItems.map((item) => (item.id === id ? updated : item));
   return updated;

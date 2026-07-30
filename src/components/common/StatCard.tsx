@@ -21,8 +21,8 @@ export function StatCard({ label, value, icon: Icon, tone = 'default' }: StatCar
         <Icon className="h-5 w-5" aria-hidden="true" />
       </div>
       <div className="min-w-0">
-        <p className="truncate text-sm text-gray-500 dark:text-gray-400">{label}</p>
-        <p className="truncate text-lg font-bold text-gray-900 dark:text-white">{value}</p>
+        <p className="truncate text-sm text-gray-500">{label}</p>
+        <p className="truncate text-lg font-bold text-gray-900">{value}</p>
       </div>
     </Card>
   );

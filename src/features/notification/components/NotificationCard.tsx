@@ -25,13 +25,13 @@ export function NotificationCard({ notification, onMarkAsRead }: NotificationCar
               className={cn(
                 'text-sm',
                 notification.read
-                  ? 'font-medium text-gray-500 dark:text-gray-400'
-                  : 'font-semibold text-gray-900 dark:text-white',
+                  ? 'font-medium text-gray-500'
+                  : 'font-semibold text-gray-900',
               )}
             >
               {notification.title}
             </p>
-            <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{notification.body}</p>
+            <p className="mt-0.5 text-sm text-gray-500">{notification.body}</p>
           </div>
         </div>
         {!notification.read && (
@@ -47,9 +47,7 @@ export function NotificationCard({ notification, onMarkAsRead }: NotificationCar
       </div>
       <ItemStatusCard
         name={notification.itemName}
-        category={notification.category}
         remainingDays={notification.remainingDays}
-        riskLevel={notification.riskLevel}
       />
     </div>
   );

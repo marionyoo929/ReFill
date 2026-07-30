@@ -10,3 +10,4 @@ export {
   useDeleteInventoryItem,
 } from '@/features/inventory/hooks/useInventoryMutations';
 export type { InventoryItem, InventoryItemInput } from '@/features/inventory/types/inventory.types';
+export { buildPurchaseHistoryUpdateInput } from '@/features/inventory/utils/purchaseHistory';

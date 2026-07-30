@@ -48,7 +48,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       <div>
         <label
           htmlFor="email"
-          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+          className="mb-1.5 block text-sm font-medium text-gray-700"
         >
           이메일
         </label>
@@ -57,7 +57,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           type="email"
           placeholder="you@example.com"
           autoComplete="email"
-          className="dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-500"
+          className=""
           {...register('email')}
         />
         {errors.email && <p className="mt-1 text-sm text-danger-600">{errors.email.message}</p>}
@@ -66,7 +66,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       <div>
         <label
           htmlFor="password"
-          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+          className="mb-1.5 block text-sm font-medium text-gray-700"
         >
           비밀번호
         </label>
@@ -75,7 +75,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           type="password"
           placeholder="6자 이상 입력해주세요"
           autoComplete="current-password"
-          className="dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-500"
+          className=""
           {...register('password')}
         />
         {errors.password && (

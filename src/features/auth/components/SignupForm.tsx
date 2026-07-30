@@ -55,7 +55,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
       <div>
         <label
           htmlFor="nickname"
-          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+          className="mb-1.5 block text-sm font-medium text-gray-700"
         >
           닉네임
         </label>
@@ -73,7 +73,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
       <div>
         <label
           htmlFor="email"
-          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+          className="mb-1.5 block text-sm font-medium text-gray-700"
         >
           이메일
         </label>
@@ -90,7 +90,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
       <div>
         <label
           htmlFor="password"
-          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+          className="mb-1.5 block text-sm font-medium text-gray-700"
         >
           비밀번호
         </label>
@@ -109,7 +109,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
       <div>
         <label
           htmlFor="passwordConfirm"
-          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+          className="mb-1.5 block text-sm font-medium text-gray-700"
         >
           비밀번호 확인
         </label>

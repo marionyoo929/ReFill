@@ -10,23 +10,6 @@
       content="Re:Fill - 필요하기 전에, 먼저 채우다. 생활 소비를 예측하는 AI 플랫폼."
     />
     <title>Re:Fill</title>
-    <script>
-      (function () {
-        try {
-          var stored = localStorage.getItem('refill_theme');
-          var isDark =
-            stored === 'dark' ||
-            (stored !== 'light' &&
-              window.matchMedia &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches);
-          if (isDark) {
-            document.documentElement.classList.add('dark');
-          }
-        } catch (error) {
-          // localStorage 접근 불가 시 라이트 모드로 폴백한다.
-        }
-      })();
-    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -3,9 +3,6 @@ import { useSettings } from '@/features/settings/hooks/useSettings';
 import { useUpdateSettings } from '@/features/settings/hooks/useUpdateSettings';
 import { useToast } from '@/providers/ToastProvider';
 import { ProfileSection } from '@/features/settings/components/ProfileSection';
-import { NotificationSettingsSection } from '@/features/settings/components/NotificationSettingsSection';
-import { ThemeSettingsSection } from '@/features/settings/components/ThemeSettingsSection';
-import { LogoutSection } from '@/features/settings/components/LogoutSection';
 import { SettingsSkeleton } from '@/features/settings/components/SettingsSkeleton';
 import { ErrorState } from '@/components/common/ErrorState';
 import type { UserSettings } from '@/features/settings/types/settings.types';
@@ -46,11 +43,6 @@ export function SettingsView() {
     <div className="flex flex-col gap-4">
       <ProfileSection />
 
-      <NotificationSettingsSection
-        settings={draft}
-        onChange={(patch) => setDraft((prev) => (prev ? { ...prev, ...patch } : prev))}
-      />
-
       <button
         type="button"
         onClick={() => void handleSave()}
@@ -59,10 +51,6 @@ export function SettingsView() {
       >
         {isPending ? '저장 중...' : '설정 저장'}
       </button>
-
-      <ThemeSettingsSection />
-
-      <LogoutSection />
     </div>
   );
 }

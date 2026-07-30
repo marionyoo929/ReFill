@@ -44,8 +44,8 @@ export function CalendarView() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+    <div className="flex flex-1 flex-col gap-6 md:min-h-0">
+      <div className="shrink-0 flex items-center justify-between">
         <button
           type="button"
           aria-label="이전 달"
@@ -54,7 +54,7 @@ export function CalendarView() {
         >
           <ChevronLeft className="h-5 w-5" aria-hidden="true" />
         </button>
-        <h1 className="text-lg font-bold text-gray-900 dark:text-white">
+        <h1 className="text-lg font-bold text-gray-900">
           {format(referenceMonth, 'yyyy년 M월', { locale: ko })}
         </h1>
         <button
@@ -67,14 +67,17 @@ export function CalendarView() {
         </button>
       </div>
 
-      <CalendarGrid
-        referenceMonth={referenceMonth}
-        selectedDate={selectedDate}
-        items={items}
-        onSelectDate={setSelectedDate}
-      />
+      <div className="flex flex-col md:min-h-0 md:flex-[3]">
+        <CalendarGrid
+          referenceMonth={referenceMonth}
+          selectedDate={selectedDate}
+          items={items}
+          onSelectDate={setSelectedDate}
+          className="flex-1"
+        />
+      </div>
 
-      <DayDetailPanel date={selectedDate} items={selectedDayItems} />
+      <DayDetailPanel date={selectedDate} items={selectedDayItems} className="md:flex-[2]" />
     </div>
   );
 }

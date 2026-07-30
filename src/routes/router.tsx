@@ -11,11 +11,8 @@ const SignupPage = lazy(() => import('@/pages/SignupPage'));
 const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'));
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
 const InventoryPage = lazy(() => import('@/pages/InventoryPage'));
-const CalendarPage = lazy(() => import('@/pages/CalendarPage'));
 const ItemDetailPage = lazy(() => import('@/pages/ItemDetailPage'));
 const AddItemPage = lazy(() => import('@/pages/AddItemPage'));
-const NotificationPage = lazy(() => import('@/pages/NotificationPage'));
-const AnalyticsPage = lazy(() => import('@/pages/AnalyticsPage'));
 const SettingsPage = lazy(() => import('@/pages/SettingsPage'));
 const ProfilePage = lazy(() => import('@/pages/ProfilePage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
@@ -43,11 +40,8 @@ export const router = createBrowserRouter([
     children: [
       { path: ROUTES.DASHBOARD, element: withSuspense(<DashboardPage />) },
       { path: ROUTES.INVENTORY, element: withSuspense(<InventoryPage />) },
-      { path: ROUTES.CALENDAR, element: withSuspense(<CalendarPage />) },
       { path: ROUTES.ITEM_DETAIL, element: withSuspense(<ItemDetailPage />) },
       { path: ROUTES.ADD_ITEM, element: withSuspense(<AddItemPage />) },
-      { path: ROUTES.NOTIFICATIONS, element: withSuspense(<NotificationPage />) },
-      { path: ROUTES.ANALYTICS, element: withSuspense(<AnalyticsPage />) },
       { path: ROUTES.SETTINGS, element: withSuspense(<SettingsPage />) },
       { path: ROUTES.PROFILE, element: withSuspense(<ProfilePage />) },
     ],

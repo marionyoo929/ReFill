@@ -11,16 +11,21 @@ const NOTIFICATION_TITLE: Record<NotificationType, string> = {
 };
 
 function getNotificationType(
-  remainingDays: number,
-  riskLevel: EnrichedInventoryItem['riskLevel'],
+  item: EnrichedInventoryItem,
 ): NotificationType | null {
-  if (remainingDays < 0) {
+  if (item.notificationEnabled === false) {
+    return null;
+  }
+
+  const leadTime = item.notificationLeadTimeDays ?? 7;
+
+  if (item.remainingDays < 0) {
     return 'overdue';
   }
-  if (remainingDays === 0) {
+  if (item.remainingDays === 0) {
     return 'today';
   }
-  if (riskLevel !== 'success') {
+  if (item.remainingDays <= leadTime && item.riskLevel !== 'success') {
     return 'upcoming';
   }
   return null;
@@ -41,7 +46,7 @@ export function buildNotificationsFromItems(
 ): Omit<NotificationItem, 'read'>[] {
   return items
     .map((item) => {
-      const type = getNotificationType(item.remainingDays, item.riskLevel);
+      const type = getNotificationType(item);
       if (!type) {
         return null;
       }
@@ -49,7 +54,6 @@ export function buildNotificationsFromItems(
         id: `${item.id}-${type}`,
         itemId: item.id,
         itemName: item.name,
-        category: item.category,
         type,
         remainingDays: item.remainingDays,
         riskLevel: item.riskLevel,

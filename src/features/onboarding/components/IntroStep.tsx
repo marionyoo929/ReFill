@@ -5,8 +5,8 @@ export function IntroStep() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Re:Fill 시작하기</h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-[#C9CED8]">
+        <h1 className="text-xl font-bold text-gray-900">Re:Fill 시작하기</h1>
+        <p className="mt-1 text-sm text-gray-500">
           아래 기능으로 소진일을 미리 확인할 수 있어요.
         </p>
       </div>
@@ -17,8 +17,8 @@ export function IntroStep() {
               <Icon className="h-5 w-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
-              <p className="font-semibold text-gray-900 dark:text-white">{title}</p>
-              <p className="text-sm text-gray-500 dark:text-[#C9CED8]">{description}</p>
+              <p className="font-semibold text-gray-900">{title}</p>
+              <p className="text-sm text-gray-500">{description}</p>
             </div>
           </Card>
         ))}

@@ -10,6 +10,7 @@ type CalendarGridProps = {
   selectedDate: Date;
   items: EnrichedInventoryItem[];
   onSelectDate: (date: Date) => void;
+  className?: string;
 };
 
 export function CalendarGrid({
@@ -17,17 +18,27 @@ export function CalendarGrid({
   selectedDate,
   items,
   onSelectDate,
+  className,
 }: CalendarGridProps) {
   const days = getMonthGridDays(referenceMonth);
+  const rowCount = Math.ceil(days.length / 7);
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-      <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-400">
+    <div
+      className={cn(
+        'flex flex-col rounded-2xl border border-gray-100 bg-white p-4 shadow-sm md:min-h-0',
+        className,
+      )}
+    >
+      <div className="grid shrink-0 grid-cols-7 gap-1 text-center text-xs font-medium text-gray-400">
         {WEEKDAY_LABELS.map((label) => (
           <span key={label}>{label}</span>
         ))}
       </div>
-      <div className="mt-2 grid grid-cols-7 gap-1">
+      <div
+        className="mt-2 grid flex-1 grid-cols-7 gap-1 md:min-h-0"
+        style={{ gridTemplateRows: `repeat(${String(rowCount)}, minmax(0, 1fr))` }}
+      >
         {days.map((day) => {
           const dayItems = items.filter((item) => isSameDay(item.expectedEndDate, day));
           const isCurrentMonth = isSameMonth(day, referenceMonth);
@@ -41,7 +52,7 @@ export function CalendarGrid({
               aria-label={`${format(day, 'M월 d일')}${dayItems.length > 0 ? `, 리필 예정 ${String(dayItems.length)}건` : ''}`}
               aria-pressed={isSelected}
               className={cn(
-                'flex flex-col items-center gap-1 rounded-2xl py-2 text-sm transition-colors',
+                'flex h-full w-full flex-col items-center justify-center gap-1 rounded-2xl text-sm transition-colors',
                 isCurrentMonth ? 'text-gray-900' : 'text-gray-300',
                 isToday(day) && !isSelected && 'font-bold text-primary-700',
                 isSelected ? 'bg-primary-600 text-white' : 'hover:bg-gray-50',

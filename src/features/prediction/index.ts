@@ -1,4 +1,8 @@
-export { predictEndDate, getItemStatus } from '@/features/prediction/services/predictionService';
+export {
+  predictEndDate,
+  getItemStatus,
+  getPredictionBasisDate,
+} from '@/features/prediction/services/predictionService';
 export { getMostUrgentRiskLevel } from '@/features/prediction/utils/predictionCalculations';
 export type {
   RiskLevel,

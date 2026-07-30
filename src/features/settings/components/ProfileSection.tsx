@@ -32,12 +32,12 @@ export function ProfileSection() {
 
   return (
     <Card className="flex flex-col gap-4">
-      <h2 className="text-lg font-bold text-gray-900 dark:text-white">기본 정보</h2>
+      <h2 className="text-lg font-bold text-gray-900">기본 정보</h2>
 
       <div>
         <label
           htmlFor="settings-email"
-          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+          className="mb-1.5 block text-sm font-medium text-gray-700"
         >
           이메일
         </label>
@@ -47,7 +47,7 @@ export function ProfileSection() {
       <div>
         <label
           htmlFor="settings-nickname"
-          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200"
+          className="mb-1.5 block text-sm font-medium text-gray-700"
         >
           이름
         </label>

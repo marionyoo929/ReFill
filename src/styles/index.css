@@ -1,9 +1,6 @@
 @import 'tailwindcss';
 @import 'pretendard/dist/web/variable/pretendardvariable.css';
 
-/* Settings의 테마(시스템/라이트/다크) 설정에 따라 <html>에 추가되는 dark 클래스를 인식한다 */
-@custom-variant dark (&:where(.dark, .dark *));
-
 /*
  * Re:Fill 디자인 토큰
  * PRD 색상 시스템(Indigo/Blue/Green/Orange/Red/Sky/Gray)을
@@ -99,9 +96,11 @@
 @layer base {
   html {
     font-family: var(--font-sans);
+    /* 화면 전체 글씨/여백을 한 단계 키우기 위한 기준 폰트 크기 상향 */
+    font-size: 120%;
   }
 
   body {
-    @apply bg-white text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100;
+    @apply bg-white text-gray-900 antialiased;
   }
 }

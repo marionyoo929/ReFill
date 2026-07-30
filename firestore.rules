@@ -37,12 +37,6 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // categories - product_db와 동일하게 참조용 마스터 데이터
-    match /categories/{categoryId} {
-      allow read: if isSignedIn();
-      allow write: if isAdmin();
-    }
-
     // user_items/{itemId} - 소유자만 읽기/쓰기 가능
     match /user_items/{itemId} {
       allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;

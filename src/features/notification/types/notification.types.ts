@@ -6,7 +6,6 @@ export type NotificationItem = {
   id: string;
   itemId: string;
   itemName: string;
-  category: string;
   type: NotificationType;
   remainingDays: number;
   riskLevel: RiskLevel;

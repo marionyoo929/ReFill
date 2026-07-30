@@ -1,6 +1,4 @@
 import { isSameMonth, isSameDay, isToday, format } from 'date-fns';
-import { Link } from 'react-router-dom';
-import { ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/cn';
 import { getMonthGridDays, WEEKDAY_LABELS } from '@/utils/calendarGrid';
 import { RISK_DOT_CLASS } from '@/constants/riskDisplay';
@@ -18,15 +16,9 @@ export function CalendarPreview({ items }: CalendarPreviewProps) {
   return (
     <section aria-label="이번 달 리필 예정 미리보기">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+        <h2 className="text-lg font-bold text-gray-900">
           {format(today, 'M월')} 리필 캘린더
         </h2>
-        <Link
-          to={ROUTES.CALENDAR}
-          className="text-sm font-medium text-primary-600 hover:text-primary-700"
-        >
-          전체 캘린더 보기
-        </Link>
       </div>
 
       <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">

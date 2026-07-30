@@ -19,9 +19,13 @@ export function InventoryListView() {
     return <InventoryEmptyState />;
   }
 
+  const sortedByRegisteredAt = [...data].sort(
+    (a, b) => b.registeredAt.getTime() - a.registeredAt.getTime(),
+  );
+
   return (
     <div className="flex flex-col gap-3">
-      {data.map((item) => (
+      {sortedByRegisteredAt.map((item) => (
         <ItemCard key={item.id} item={item} />
       ))}
     </div>

@@ -1,17 +1,8 @@
-import type { ImportanceLevel } from '@/features/inventory/types/inventory.types';
-
-export const CATEGORY_OPTIONS: string[] = ['위생용품', '생활용품', '식품', '문구류', '기타'];
-
-export const IMPORTANCE_OPTIONS: { value: ImportanceLevel; label: string }[] = [
-  { value: 'essential', label: '필수' },
-  { value: 'important', label: '중요' },
-  { value: 'normal', label: '일반' },
-  { value: 'low', label: '낮음' },
-];
-
-export const IMPORTANCE_LABEL: Record<ImportanceLevel, string> = {
-  essential: '필수',
-  important: '중요',
-  normal: '일반',
-  low: '낮음',
-};
+export const CAPACITY_UNIT_OPTIONS = [
+  { value: 'mL', label: 'mL' },
+  { value: 'L', label: 'L' },
+  { value: '개', label: '개' },
+  { value: '통', label: '통' },
+  { value: '병', label: '병' },
+  { value: 'custom', label: '직접 입력' },
+] as const;

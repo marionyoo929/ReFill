@@ -1,6 +1,5 @@
 import { useAnalyticsSummary } from '@/features/analytics/hooks/useAnalyticsSummary';
 import { AnalyticsSummarySection } from '@/features/analytics/components/AnalyticsSummarySection';
-import { CategoryBreakdownSection } from '@/features/analytics/components/CategoryBreakdownSection';
 import { RiskLevelBreakdownSection } from '@/features/analytics/components/RiskLevelBreakdownSection';
 import { CycleExtremesSection } from '@/features/analytics/components/CycleExtremesSection';
 import { AnalyticsEmptyState } from '@/features/analytics/components/AnalyticsEmptyState';
@@ -25,10 +24,6 @@ export function AnalyticsView() {
   return (
     <div className="flex flex-col gap-6">
       <AnalyticsSummarySection summary={summary} />
-      <CategoryBreakdownSection
-        categoryCounts={summary.categoryCounts}
-        totalCount={summary.totalCount}
-      />
       <RiskLevelBreakdownSection
         riskLevelCounts={summary.riskLevelCounts}
         totalCount={summary.totalCount}
